@@ -1,0 +1,63 @@
+.add-hike-container{
+  padding:15px;
+}
+
+
+
+label{
+  display: block;
+  position: relative;
+  right:0px;
+  /* float:left;
+  clear:both; */
+  /* margin-left: 100px; */
+  padding: 10px;
+  /* background-color: red; */
+}
+
+input{
+  border: 0px;
+  border-bottom: 2px;
+  border-radius: 3px;
+  border-style: solid;
+  border-color: #788291;
+  font-family: ariel;
+  align-items: center;
+  /* clear:both; */
+  margin-left: 5px;
+  /* float:right; */
+}
+
+input:focus::placeholder{
+  
+}
+
+span{
+    align-items: center;
+    position: fixed;
+    right:5px;
+}
+
+textarea{
+  width: 300px;
+  /* float:right; */
+  border-radius: 3px;
+  border: 1px;
+  border-style: solid;
+  border-color:#788291;
+  margin-left: 5px;
+}
+
+select{
+  margin-left: 5px;
+  border:0;
+  border-left: 1px;
+  border-style: solid;
+}
+
+#submit{
+ /* float: left; */
+ align-items: center;
+ margin-bottom:15px;
+align-self: center;
+}

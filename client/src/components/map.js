@@ -38,7 +38,13 @@ const MyMapComponent = compose(
   </GoogleMap>
 )
 
-
+function ZoomBackBtn(props){
+  return(
+    <button onClick={props.onClick}>
+      Zoom Back
+    </button>
+  );
+}
 
 
 export class Map extends React.Component {
@@ -47,13 +53,16 @@ export class Map extends React.Component {
     this.state = {
       hikes: [],
       selectedMarker : ['yo'],
+      originPos:{lat: 65, lng: -18.554914},
       initPos: {lat: 65, lng: -18.554914},
       zoom: 6,
       isZoomed: false
     };
+    this.handleMarkerClick = this.handleMarkerClick.bind(this);
+    this.handleZoomBack = this.handleZoomBack.bind(this);
   }
 
-  handleMarkerClick = this.handleMarkerClick.bind(this);
+
 
 
 //na i data fra server.js
@@ -73,13 +82,21 @@ export class Map extends React.Component {
     this.setState({initPos:marker.pos, zoom:10, isZoomed: true});
   }
 
-
-
+  handleZoomBack(){
+    this.setState({zoom: 6, isZoomed:false, initPos:this.state.originPos})
+  }
 
 
 
   render() {
     console.log('render');
+
+    const zoomBtn = this.state.isZoomed ? (
+      <ZoomBackBtn onClick={this.handleZoomBack} />
+    ) : (
+      <span></span>
+    );
+
     return (
       <div className="main-container">
         <MyMapComponent
@@ -88,6 +105,7 @@ export class Map extends React.Component {
           markers={this.state.hikes}
           onMarkerClick={this.handleMarkerClick}
         />
+        {zoomBtn}
       <HikeInfo
         info = {this.state.selectedMarker}
       />

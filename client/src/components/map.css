@@ -2,3 +2,18 @@
 .main-container{
   padding:10px;
 }
+
+button{
+  margin:10px;
+  padding:5px;
+  background-color: #42f4df;
+  color: #2a3836;
+  border-style:ridge;
+}
+
+button:hover{
+  /* border-width: 2px; */
+  border-color: #446661;
+  /* border-top: 1px;
+  border-right: 1px; */
+}
