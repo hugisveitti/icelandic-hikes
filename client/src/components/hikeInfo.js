@@ -12,10 +12,6 @@ export class HikeInfo extends React.Component {
 
     render(){
       const info = this.props.info;
-      console.log('hikeinfo render')
-      console.log('info', info)
-
-      console.log("info.title",info.title)
       if(info.title){
         return (
           <div>
@@ -25,6 +21,7 @@ export class HikeInfo extends React.Component {
               <li>Length is {info.length} meters</li>
               <li>Duration is {info.duration}</li>
               <li>Elevation is {info.elevation} meters</li>
+              <li>Description: {info.description}</li>
             </ul>
           </div>
         )

@@ -30,12 +30,28 @@ class App extends Component {
     super();
     this.state = {
       addingHike: false,
+      newMarkerPos:{lat:0, lng:0}
     };
     this.handleAddHike = this.handleAddHike.bind(this);
+    this.sendMarker = this.sendMarker.bind(this);
+    this.addHikeChild = React.createRef();
   }
 
   handleAddHike(){
     this.setState({addingHike: !this.state.addingHike});
+  }
+
+//thegar notandi ytir a kortid
+  sendMarker(param){
+    console.log('param', param)
+    if(this.state.addingHike){
+      this.setState({newMarkerPos: param})
+      this.sendMarkerToChild();
+    }
+  }
+
+  sendMarkerToChild(){
+    this.addHikeChild.current.getPos(this.state.newMarkerPos);
   }
 
   render() {
@@ -45,10 +61,13 @@ class App extends Component {
         <CloseAddHikeButton onClick={this.handleAddHike} />
     );
 
-    const showAddHike = this.state.addingHike;
+    //const showAddHike = this.state.addingHike;
 
     const addHikeElement = this.state.addingHike ? (
-      <AddHike />
+      <AddHike
+        ref={this.addHikeChild}
+        newMarkerPos={this.state.newMarkerPos}
+      />
     ) : (
       <span></span>
     )
@@ -59,7 +78,10 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Hikes in Iceland</h1>
         </header>
-        <Map />
+        <Map
+          addingHike={this.addingHike}
+          sendMarker={this.sendMarker}
+        />
 
         {addHikeElement}
         {addHikeBtn}

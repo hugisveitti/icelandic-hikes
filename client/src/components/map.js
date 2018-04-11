@@ -26,6 +26,7 @@ const MyMapComponent = compose(
     defaultCenter={props.pos}
     center={props.pos}
     zoom={props.zoom}
+    onClick={props.mapClicked}
   >
   {props.markers.map((marker, index) => {
     return (
@@ -60,12 +61,11 @@ export class Map extends React.Component {
     };
     this.handleMarkerClick = this.handleMarkerClick.bind(this);
     this.handleZoomBack = this.handleZoomBack.bind(this);
+    this.handleMapClicked = this.handleMapClicked.bind(this);
   }
 
 
-
-
-//na i data fra server.js
+//na i data fra server.js og firebase
   componentDidMount() {
     console.log('did mount')
     fetch('/api/hikes')
@@ -82,15 +82,22 @@ export class Map extends React.Component {
     this.setState({initPos:marker.pos, zoom:10, isZoomed: true});
   }
 
+//ef ytt er a marker og fara til baka
   handleZoomBack(){
     this.setState({zoom: 6, isZoomed:false, initPos:this.state.originPos})
   }
 
+//fyrir ad velja nyjan marker
+  handleMapClicked(obj){
+      console.log('yooooo');
+      console.log(obj.latLng.lat())
+      console.log(obj.latLng.lng())
+      this.props.sendMarker({lat:obj.latLng.lat(), lng:obj.latLng.lng()})
+      console.log(this.props.addingHike)
+  }
 
 
   render() {
-    console.log('render');
-
     const zoomBtn = this.state.isZoomed ? (
       <ZoomBackBtn onClick={this.handleZoomBack} />
     ) : (
@@ -104,6 +111,7 @@ export class Map extends React.Component {
           pos = {this.state.initPos}
           markers={this.state.hikes}
           onMarkerClick={this.handleMarkerClick}
+          mapClicked={this.handleMapClicked}
         />
         {zoomBtn}
         <HikeInfo

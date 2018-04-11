@@ -3,13 +3,14 @@ import './addHike.css'
 //https://www.npmjs.com/package/react-notifications
 import {NotificationManager} from 'react-notifications';
 
+
 export class AddHike extends React.Component {
   constructor(){
     super();
     this.state = {
       title:"",
       length:0,
-      lat: 0,
+      lat:0,
       lng:0,
       elevation:0,
       duration:'',
@@ -26,13 +27,17 @@ export class AddHike extends React.Component {
     console.log(this.state)
   }
 
+  getPos(pos){
+    console.log(this.props.newMarkerPos.lng);
+    this.setState({lat:pos.lat,lng:pos.lng});
+  }
+
   //thegear ytt er a sumbit takkann kallad a firebaseio
   handleSubmit(event){
     console.log('submit')
       event.preventDefault();
     if(this.state.title !== ""){
         console.log('filled form')
-
         fetch('http://localhost:5000/api/addHikes', {
         method: 'POST',
         headers: {
@@ -68,10 +73,13 @@ export class AddHike extends React.Component {
           <span value={this.state.length > 0 ? 'meters': ''}></span>
           </label>
           <label>
-          <input placeholder="Longitude" type="text" name="lng" value={this.state.lng > 0 ? this.state.lng : ''} onChange={this.handleChange} />
+          <input placeholder="Longitude" type="text" name="lng" value={this.state.lng !== 0 ? this.state.lng : ''} onChange={this.handleChange} />
           </label>
           <label>
-          <input placeholder="Latitude" type="text" name="lat" value={this.state.lat> 0 ? this.state.lat : ''} onChange={this.handleChange} />
+          <input placeholder="Latitude" type="text" name="lat" value={this.state.lat !== 0 ? this.state.lat : ''} onChange={this.handleChange} />
+          </label>
+          <label>
+            You can add Lat and Lng by clicking the map.
           </label>
           <label>
           <input placeholder="Elevation" type="text" name="elevation" value={this.state.elevation> 0 ? this.state.elevation : ''} onChange={this.handleChange} />
@@ -92,7 +100,6 @@ export class AddHike extends React.Component {
           </label>
           <input id="submit" type="submit" value="Submit" />
         </form>
-
       </div>
     )
   }

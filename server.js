@@ -44,15 +44,14 @@ ref.on("value", function(data){
   for(var i=0; i<keys.length; i++){
     var k = keys[i];
 
-    var title = k;
+    var title = output[k].title;
     var lng = output[k].lng;
     var lat = output[k].lat;
     var length = output[k].length;
     var elevation = output[k].elevation;
     var difficulty = output[k].difficulty;
     var duration = output[k].duration;
-    var description = output[k].description
-    //var info = [title, lng, lat, length, elevation, difficulty, duration];
+    var description = output[k].description;
     hikesInfo.push({title: title, pos:{lng:lng, lat:lat}, length :length, elevation:elevation, difficulty:difficulty, duration:duration, description:description})
   }
   console.log(hikesInfo);
@@ -61,10 +60,9 @@ ref.on("value", function(data){
     res.json(hikesInfo);
     console.log('data sent')
   })
-  console.log('fin')
 },function(err){
-  console.log(err)
-})
+    console.log(err)
+  })
 
 //add contribution values to firebase
 app.post('/api/addHikes', (req, res) => {
