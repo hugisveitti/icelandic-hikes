@@ -106,9 +106,9 @@ export class Map extends React.Component {
           onMarkerClick={this.handleMarkerClick}
         />
         {zoomBtn}
-      <HikeInfo
-        info = {this.state.selectedMarker}
-      />
+        <HikeInfo
+          info = {this.state.selectedMarker}
+        />
       </div>
     )
   }

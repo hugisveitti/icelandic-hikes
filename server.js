@@ -66,16 +66,14 @@ ref.on("value", function(data){
   console.log(err)
 })
 
-// app.get('/api/addHikes', (req, res ) =>{
-//   console.log('gotten addhikes')
-//   console.log(req.body)
-//   res.send('komid ven')
-// })
-
+//add contribution values to firebase
 app.post('/api/addHikes', (req, res) => {
   console.log("succa")
   console.log(req.body)
-  res.send('takk fyrir sumbit veeenur')
+  var newData = req.body;
+  //res.send('takk fyrir sumbit veeenur')
+  var ref = database.ref('NewHikes');
+  ref.push(newData);
 })
 
 app.get('/', (req,res) => {

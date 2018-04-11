@@ -28,8 +28,10 @@ input{
   /* float:right; */
 }
 
+
+
 input:focus::placeholder{
-  
+
 }
 
 span{
@@ -60,4 +62,16 @@ select{
  align-items: center;
  margin-bottom:15px;
 align-self: center;
+/* border-width: 2px; */
+
+}
+
+#submit:hover{
+  border-color: #446661;
+  /* border-top: 1px;
+  border-right: 1px; */
+  /* border-right: 2px; */
+  border-bottom: 2px;
+  /* border-right:1px; */
+  border-style:solid
 }

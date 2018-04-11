@@ -3,12 +3,29 @@
   padding:10px;
 }
 
-button{
+/* button{
   margin:10px;
   padding:5px;
   background-color: #42f4df;
   color: #2a3836;
   border-style:ridge;
+} */
+
+
+
+button{
+  border: 0px;
+  border-bottom: 2px;
+  border-radius: 3px;
+  border-style: solid;
+  border-color: #788291;
+  font-family: ariel;
+  align-items: center;
+  /* clear:both; */
+  margin-left: 5px;
+  /* float:right; */
+  margin-bottom: 10px;
+  padding: 5px;
 }
 
 button:hover{
@@ -16,4 +33,8 @@ button:hover{
   border-color: #446661;
   /* border-top: 1px;
   border-right: 1px; */
+  /* border-right: 2px; */
+  border-bottom: 2px;
+  /* border-right:1px; */
+  border-style:solid
 }

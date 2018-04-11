@@ -1,5 +1,7 @@
 import React from 'react';
 import './addHike.css'
+//https://www.npmjs.com/package/react-notifications
+import {NotificationManager} from 'react-notifications';
 
 export class AddHike extends React.Component {
   constructor(){
@@ -11,7 +13,7 @@ export class AddHike extends React.Component {
       lng:0,
       elevation:0,
       duration:'',
-      difficulty:'',
+      difficulty:'easy',
       description:''
     };
     this.handleChange = this.handleChange.bind(this);
@@ -26,32 +28,32 @@ export class AddHike extends React.Component {
 
   //thegear ytt er a sumbit takkann kallad a firebaseio
   handleSubmit(event){
-
     console.log('submit')
-    event.preventDefault();
-    fetch('http://localhost:5000/api/addHikes', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      firstParam: 'yourValue',
-      secondParam: 'yourOtherValue',
-    })
-  }).then(function(res) {
-    console.log('res', res.body);
-    console.log('success')
-  }).catch(function(err){
-    console.log('err',err)
-  });
+      event.preventDefault();
+    if(this.state.title !== ""){
+        console.log('filled form')
+
+        fetch('http://localhost:5000/api/addHikes', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.state)
+      }).then(function(res) {
+        console.log('res', res.body);
+        console.log('success')
+        NotificationManager.success('Thanks', 'Thank you for your contribution',3000);
+      }).catch(function(err){
+        console.log('err',err)
+        NotificationManager.error("Error", 'There has been an error')
+      });
+    } else {
+      NotificationManager.success('You have to fill out all the forms.','Error',3000)
+      console.log('not filled form')
+    }
   }
 
-  // .then(function(res) {
-  //   console.log('res', res);
-  // }).catch(function(err){
-  //   console.log('err',err)
-  // });
 
   render(){
     return (
@@ -90,6 +92,7 @@ export class AddHike extends React.Component {
           </label>
           <input id="submit" type="submit" value="Submit" />
         </form>
+
       </div>
     )
   }
