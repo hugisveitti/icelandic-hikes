@@ -1,6 +1,8 @@
 
 .main-container{
-  padding:10px;
+  padding-top:10px;
+  padding-left:10px;
+  padding-right:10px;
 }
 
 /* button{
@@ -26,7 +28,7 @@ button{
   /* float:right; */
   margin-bottom: 10px;
   padding: 5px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 button:hover{

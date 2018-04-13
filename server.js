@@ -52,7 +52,7 @@ ref.on("value", function(data){
     var difficulty = output[k].difficulty;
     var duration = output[k].duration;
     var description = output[k].description;
-    hikesInfo.push({title: title, pos:{lng:lng, lat:lat}, length :length, elevation:elevation, difficulty:difficulty, duration:duration, description:description})
+    hikesInfo.push({key:k,title: title, pos:{lng:lng, lat:lat}, length :length, elevation:elevation, difficulty:difficulty, duration:duration, description:description})
   }
   console.log(hikesInfo);
 

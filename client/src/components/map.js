@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import './map.css';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-import { compose, withProps } from 'recompose';
+import { compose, withProps, withState, withHandlers } from 'recompose';
 import HikeInfo from './hikeInfo.js'
 
 
@@ -22,17 +22,21 @@ const MyMapComponent = compose(
   withGoogleMap
 )((props) =>
   <GoogleMap
-    defaultZoom={props.zoom}
+    defaultZoom={props.defZoom}
     defaultCenter={props.pos}
     center={props.pos}
     zoom={props.zoom}
     onClick={props.mapClicked}
+    onZoomChanged={props.zoomChanged}
+    ref={props.onMapMounted}
   >
-  {props.markers.map((marker, index) => {
+  {props.markers.map((hike, index) => {
     return (
       <Marker
-      position={marker.pos}
-      onClick={() => props.onMarkerClick(marker)}
+        position={hike.pos}
+        onClick={() => props.onMarkerClick(hike)}
+        key={hike.key}
+        icon={props.icon}
       />
     )
   })}
@@ -53,51 +57,64 @@ export class Map extends React.Component {
     super();
     this.state = {
       hikes: [],
+      icon:[],
       selectedMarker : ['yo'],
       originPos:{lat: 65, lng: -18.554914},
       initPos: {lat: 65, lng: -18.554914},
       zoom: 6,
-      isZoomed: false
+      isZoomed: false,
+      map: undefined
     };
     this.handleMarkerClick = this.handleMarkerClick.bind(this);
     this.handleZoomBack = this.handleZoomBack.bind(this);
     this.handleMapClicked = this.handleMapClicked.bind(this);
+    this.handleZoomChanged = this.handleZoomChanged.bind(this);
+    this.onMapMounted = this.onMapMounted.bind(this);
   }
 
 
 //na i data fra server.js og firebase
   componentDidMount() {
-    console.log('did mount')
     fetch('/api/hikes')
       .then(res => res.json())
       .then(hikes => this.setState({hikes}, () =>  {
-         console.log('hikes fetched...', hikes);
-    }
-  ));
+       }
+    ));
   }
 
+  onMapMounted(ref) {
+    this.setState({map:ref});
+    return ref;
+  }
+
+
+  handleZoomChanged(){
+    this.setState({zoom:this.state.map.getZoom()})
+    if(this.state.map.getZoom() != 6){
+      this.setState({isZoomed: true})
+    }
+  }
 
   handleMarkerClick(marker){
     this.setState({selectedMarker: marker})
     this.setState({initPos:marker.pos, zoom:10, isZoomed: true});
+    console.log(this.state.icon);
   }
 
 //ef ytt er a marker og fara til baka
   handleZoomBack(){
-    this.setState({zoom: 6, isZoomed:false, initPos:this.state.originPos})
+    this.setState({initPos:this.state.originPos,zoom: 6, isZoomed:false})
   }
 
 //fyrir ad velja nyjan marker
   handleMapClicked(obj){
-      console.log('yooooo');
-      console.log(obj.latLng.lat())
-      console.log(obj.latLng.lng())
       this.props.sendMarker({lat:obj.latLng.lat(), lng:obj.latLng.lng()})
-      console.log(this.props.addingHike)
+      console.log('map clicked')
   }
 
 
   render() {
+
     const zoomBtn = this.state.isZoomed ? (
       <ZoomBackBtn onClick={this.handleZoomBack} />
     ) : (
@@ -107,11 +124,15 @@ export class Map extends React.Component {
     return (
       <div className="main-container">
         <MyMapComponent
-          zoom = {this.state.zoom}
-          pos = {this.state.initPos}
+          pos={this.state.initPos}
           markers={this.state.hikes}
           onMarkerClick={this.handleMarkerClick}
           mapClicked={this.handleMapClicked}
+          zoomChanged={this.handleZoomChanged}
+          onMapMounted={this.onMapMounted}
+          defZoom={6}
+          zoom={this.state.zoom}
+          icon={this.state.icon}
         />
         {zoomBtn}
         <HikeInfo
