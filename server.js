@@ -44,6 +44,7 @@ ref.on("value", function(data){
   for(var i=0; i<keys.length; i++){
     var k = keys[i];
 
+
     var title = output[k].title;
     var lng = output[k].lng;
     var lat = output[k].lat;
@@ -52,7 +53,24 @@ ref.on("value", function(data){
     var difficulty = output[k].difficulty;
     var duration = output[k].duration;
     var description = output[k].description;
-    hikesInfo.push({key:k,title: title, pos:{lng:lng, lat:lat}, length :length, elevation:elevation, difficulty:difficulty, duration:duration, description:description})
+    var isLoop = output[k].isLoop;
+    var hasSameStartFinish = output[k].hasSameStartFinish;
+    var endLat = output[k].endLat;
+    var endLng = output[k].endLng;
+    hikesInfo.push({
+      key:k,
+      title: title,
+      pos:{lng:lng, lat:lat},
+      length :length,
+      elevation:elevation,
+      difficulty:difficulty,
+      duration:duration,
+      description:description,
+      isLoop:isLoop,
+      hasSameStartFinish:hasSameStartFinish,
+      endLat:endLat,
+      endLng:endLng
+    });
   }
   console.log(hikesInfo);
 
@@ -72,6 +90,7 @@ app.post('/api/addHikes', (req, res) => {
   //res.send('takk fyrir sumbit veeenur')
   var ref = database.ref('NewHikes');
   ref.push(newData);
+  res.send('takk');
 })
 
 app.get('/', (req,res) => {

@@ -1,7 +1,8 @@
 import React from 'react';
 import './addHike.css'
-//https://www.npmjs.com/package/react-notifications
-import {NotificationManager} from 'react-notifications';
+
+import { ToastContainer, toast } from 'react-toastify';
+
 
 
 export class AddHike extends React.Component {
@@ -21,10 +22,13 @@ export class AddHike extends React.Component {
       endLat:0,
       endLng:0,
       changingEndPoint:false,
+      changingStartPoint:false,
+      notificationSystem:null,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
 
   handleChange(event){
     const name = event.target.name;
@@ -49,17 +53,43 @@ export class AddHike extends React.Component {
   }
 
   getPos(pos){
-    console.log(this.props.newMarkerPos.lng);
-    if(!this.state.changingEndPoint){
+    if(this.state.changingStartPoint){
       this.setState({lat:pos.lat,lng:pos.lng});
-    } else {
+    } else if(this.state.changingEndPoint) {
       this.setState({endLat:pos.lat, endLng:pos.lng});
     }
   }
 
+
   changeEndPoint(event){
-    this.setState({changingEndPoint:!this.state.changingEndPoint})
-    console.log(this.state.changingEndPoint)
+    if(this.state.changingEndPoint){
+      this.setState({changingEndPoint:false})
+      this.props.setChangingEndLatLng(false);
+    } else {
+      this.setState({changingEndPoint: true})
+      this.props.setChangingEndLatLng(true);
+    }
+    if(this.state.changingStartPoint){
+      this.setState({changingStartPoint: false});
+      this.props.setChangingStartLatLng(false);
+    }
+    event.preventDefault();
+  }
+
+//ytt a change start point med marker
+  changeStartPoint(event){
+    if(this.state.changingStartPoint){
+      this.setState({changingStartPoint: false})
+      this.props.setChangingStartLatLng(false);
+    } else {
+      this.setState({changingStartPoint:true})
+      this.props.setChangingStartLatLng(true);
+    }
+
+    if(this.state.changingEndPoint){
+      this.setState({changingEndPoint: false});
+      this.props.setChangingEndLatLng(false);
+    }
     event.preventDefault();
   }
 
@@ -84,26 +114,45 @@ export class AddHike extends React.Component {
       event.preventDefault();
       console.log(this.state)
     if(this.state.title !== "" && this.state.length > 0 && this.state.duration !== '' ){
-        console.log('filled form')
+        console.log('submitted')
+        var sendData = {
+          title:this.state.title,
+          length:parseInt(this.state.length),
+          lat:this.state.lat,
+          lng:this.state.lng,
+          elevation:parseInt(this.state.elevation),
+          duration:this.state.duration,
+          difficulty:this.state.difficulty,
+          description:this.state.description,
+          isLoop: this.state.isLoop,
+          hasSameStartFinish: this.state.hasSameStartFinish,
+          endLat:this.state.endLat,
+          endLng:this.state.endLng,
+        };
         fetch('http://localhost:5000/api/addHikes', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(this.state)
-      }).then(function(res) {
+        body: JSON.stringify(sendData)
+      }).then((res) => {
         console.log('res', res);
         console.log('success')
-        NotificationManager.success('Thanks', 'Thank you for your contribution',3000);
+        toast.success("Thank You For Your Submission! It will be reviewed and then added to the database!", {
+          position: toast.POSITION.TOP_CENTER
+        });
+        this.setState({title:''})
         this.clearInputs();
-      }).catch(function(err){
+      }).catch((err) => {
         console.log('err',err)
-        NotificationManager.error("Error", 'There has been an error')
+
       });
     } else {
-      NotificationManager.success('You have to fill out all the forms.','Error',3000)
-      console.log('not filled form');
+
+      toast.error("You Have To Fill Out All The Forms.", {
+        position: toast.POSITION.TOP_CENTER
+      });
 
     }
   }
@@ -111,6 +160,7 @@ export class AddHike extends React.Component {
 
 
   render(){
+    console.log(this.state)
 
     const notLoop = !this.state.isLoop ? (
       <label>
@@ -141,56 +191,102 @@ export class AddHike extends React.Component {
       <span></span>
     );
 
+
+
     return (
       <div className="add-hike-container">
         <form>
-          <label>
-            <input placeholder="Name of Hike" type="text" name="title" title={this.state.title} onChange={this.handleChange} />
-          </label>
-          <label>
-            <input  placeholder="length" type="text" name="length" value={this.state.length > 0 ? this.state.length : ''} onChange={this.handleChange} />
-            <span value={this.state.length > 0 ? 'meters': ''}></span>
-          </label>
-          <label>
-            <input placeholder="Longitude" type="text" name="lng" value={this.state.lng !== 0 ? this.state.lng : ''} onChange={this.handleChange} />
-          </label>
-          <label>
-            <input placeholder="Latitude" type="text" name="lat" value={this.state.lat !== 0 ? this.state.lat : ''} onChange={this.handleChange} />
-          </label>
-          <label>
-            You can add Lat and Lng by clicking the map.
-          </label>
-          <label>
-            Is the hike a loop?
-            <div onChange={this.setIsLoop.bind(this)}>
-              <br />
-              <input type="radio" value="true" name="isLoop" /> Yes
-              <input type="radio" value="false" name="isLoop" /> No
-            </div>
-          </label>
-            {notLoop}
-            {showEndLatLng}
-          <label>
-          <input placeholder="Elevation" type="text" name="elevation" value={this.state.elevation> 0 ? this.state.elevation : ''} onChange={this.handleChange} />
-          </label>
-          <label>
-          <input placeholder="Duration" type="text" name="duration" value={this.state.duration} onChange={this.handleChange} />
-          </label>
-          <label>
-          Difficulty:
-          <select name="difficulty" value={this.state.value} onChange={this.handleChange}>
-            <option value="easy">easy</option>
-            <option value="medium">medium</option>
-            <option value="hard">hard</option>
-            </select>
-          </label>
-          <label>
-          <textarea placeholder="Description" name="description" value={this.state.description} onChange={this.handleChange} />
-          </label>
-          <button onClick={this.handleSubmit}>
+          <div className="hike">
+            <label className="title">
+              Name of the Hike
+            </label>
+              <label>
+                <input placeholder="Name of Hike" type="text" name="title" title={this.state.title} onChange={this.handleChange} />
+              </label>
+          </div>
+
+
+          <div className="hike">
+            <label className="info">
+              The starting point of the hike can either be typed in or marked with the map.
+            </label>
+            <label>
+              <input placeholder="Longitude" type="text" name="lng" value={this.state.lng !== 0 ? this.state.lng : ''} onChange={this.handleChange} />
+            </label>
+            <label>
+              <input placeholder="Latitude" type="text" name="lat" value={this.state.lat !== 0 ? this.state.lat : ''} onChange={this.handleChange} />
+            </label>
+            <button onClick={this.changeStartPoint.bind(this)} style={this.state.changingStartPoint ? {background: "#697487", color:"white"} : {color:"black"}}>
+              Change Start point by clicking map
+            </button>
+            <label className="info">
+              Is the hike a loop?
+              <div onChange={this.setIsLoop.bind(this)}>
+                <br />
+                <input type="radio" value="true" name="isLoop" /> Yes
+                <input type="radio" value="false" name="isLoop" /> No
+              </div>
+            </label>
+              {notLoop}
+              {showEndLatLng}
+
+          </div>
+
+          <div className="hike">
+            <label className="info">
+              The length should be in meters and only typed in numbers.
+            </label>
+            <label>
+              <input placeholder="length" type="text" name="length" value={this.state.length > 0 ? this.state.length : ''} onChange={this.handleChange} />
+            </label>
+          </div>
+
+          <div className="hike">
+            <label className="info">
+              The elevation should be in meters and only typed in numbers.
+            </label>
+            <label>
+              <input placeholder="Elevation" type="text" name="elevation" value={this.state.elevation> 0 ? this.state.elevation : ''} onChange={this.handleChange} />
+            </label>
+          </div>
+
+          <div className="hike">
+            <label className="info">
+              The Duration can be written in minutes or hours, and can be both in numbers and letters.
+            </label>
+            <label>
+            <input placeholder="Duration" type="text" name="duration" value={this.state.duration} onChange={this.handleChange} />
+            </label>
+          </div>
+
+          <div className="hike">
+            <label className="info">
+              Please select the difficulty of the hike.
+            </label>
+            <label>
+            Difficulty:
+            <select name="difficulty" value={this.state.value} onChange={this.handleChange}>
+              <option value="easy">easy</option>
+              <option value="medium">medium</option>
+              <option value="hard">hard</option>
+              </select>
+            </label>
+          </div>
+
+          <div className="hike">
+            <label className="info">
+              Write a good desctiption of the hike. Please write the way to get to the beginning of the hike.
+            </label>
+            <label>
+              <textarea placeholder="Description" name="description" value={this.state.description} onChange={this.handleChange} />
+            </label>
+          </div>
+
+          <button className="submit" onClick={this.handleSubmit}>
             Submit
           </button>
         </form>
+          <ToastContainer />
       </div>
     )
   }

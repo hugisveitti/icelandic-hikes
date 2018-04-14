@@ -12,7 +12,31 @@ export class HikeInfo extends React.Component {
 
     render(){
       const info = this.props.info;
-      if(info.title){
+
+
+
+
+      console.log(info)
+      if(info){
+
+
+          const HasSameStartFinish = info.HasSameStartFinish ? (
+              <li>Hike has the same starting and finsh point</li>
+            ) : (
+              <div>
+              <li>Hike has the same starting and finsh point</li>
+              <li>The end point is lat: {info.endLat}, lng: {info.endLng}</li>
+              </div>
+            )
+
+            const IsLoop = info.isLoop ? (
+              <li>Hike is a loop</li>
+            ) : (
+              <div>
+              <li>Hike is not a loop</li>
+              {HasSameStartFinish}
+              </div>
+            )
         return (
           <div>
             <h1>{info.title}</h1>
@@ -21,6 +45,7 @@ export class HikeInfo extends React.Component {
               <li>Length is {info.length} meters</li>
               <li>Duration is {info.duration}</li>
               <li>Elevation is {info.elevation} meters</li>
+              {IsLoop}
               <li>Description: {info.description}</li>
             </ul>
           </div>

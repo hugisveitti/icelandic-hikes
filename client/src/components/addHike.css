@@ -2,6 +2,10 @@
   padding:15px;
 }
 
+form{
+  padding:10px;
+  /* background-color: #c4d5ef; */
+}
 
 
 label{
@@ -11,8 +15,7 @@ label{
   /* float:left;
   clear:both; */
   /* margin-left: 100px; */
-  padding: 10px;
-  /* background-color: red; */
+  padding-bottom: 20px;
 }
 
 input{
@@ -28,6 +31,15 @@ input{
   /* float:right; */
 }
 
+input[type="text"]{
+  border: 2px;
+  border-style: solid;
+  border-color: #788291;
+  width:50%;
+  max-width: 400px;
+  height:30px;
+  font-size: 16px;
+}
 
 
 input:focus::placeholder{
@@ -57,12 +69,14 @@ select{
   border-style: solid;
 }
 
-#submit{
+.submit{
  /* float: left; */
  align-items: center;
  margin-bottom:15px;
-align-self: center;
+  align-self: center;
 /* border-width: 2px; */
+  width: 120px;
+
 
 }
 
@@ -74,4 +88,36 @@ align-self: center;
   border-bottom: 2px;
   /* border-right:1px; */
   border-style:solid
+}
+
+hr{
+  width: 5%;
+  border-width:5px;
+}
+
+label.info{
+
+  margin: auto;
+  width:35%;
+  font-size:14px;
+}
+
+div.hike{
+    padding-top:10px;
+    padding-bottom:10px;
+    width:50%;
+    margin:auto;
+    background-color:#59a87f;
+}
+
+div.hike:nth-child( 2n){
+  background-color:#c4d5ef;
+}
+
+.title{
+  font-size:22px;
+}
+
+div:last-child{
+  padding-bottom:0px;
 }

@@ -2,16 +2,14 @@
 
 import React, { Component } from 'react';
 import './map.css';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from 'react-google-maps';
 import { compose, withProps, withState, withHandlers } from 'recompose';
 import HikeInfo from './hikeInfo.js'
 
 
 //const apiKey = 'AIzaSyARkgGYzmI6y6CJoiDsIeEd5bc6s3r3_QI';
-const pos = {lat: 65, lng:-18.554919};
 
-
-const MyMapComponent = compose(
+var MyMapComponent = compose(
   withProps({
     googleMapURL:"https://maps.googleapis.com/maps/api/js?key=AIzaSyARkgGYzmI6y6CJoiDsIeEd5bc6s3r3_QI&v=3.exp&libraries=geometry,drawing,places",
     loadingElement:<div style={{ height: `100%` }} />,
@@ -37,10 +35,21 @@ const MyMapComponent = compose(
         onClick={() => props.onMarkerClick(hike)}
         key={hike.key}
         icon={props.icon}
-      />
+        ref={props.onMarkerMounted}
+        noRedraw={false}
+        animation={hike.markerAni}
+
+      >
+
+      {hike.isOpen && <InfoWindow>
+        <p>{hike.title}</p>
+      </InfoWindow>}
+
+      </Marker>
     )
   })}
   </GoogleMap>
+
 )
 
 function ZoomBackBtn(props){
@@ -56,20 +65,26 @@ export class Map extends React.Component {
   constructor() {
     super();
     this.state = {
+      markers:[],
       hikes: [],
       icon:[],
-      selectedMarker : ['yo'],
+      selectedMarker : null,
       originPos:{lat: 65, lng: -18.554914},
       initPos: {lat: 65, lng: -18.554914},
       zoom: 6,
       isZoomed: false,
-      map: undefined
+      map: undefined,
+      addingStartLatLng:false,
+      addingEndLatLng:false,
+      markerAni:0
     };
     this.handleMarkerClick = this.handleMarkerClick.bind(this);
     this.handleZoomBack = this.handleZoomBack.bind(this);
     this.handleMapClicked = this.handleMapClicked.bind(this);
     this.handleZoomChanged = this.handleZoomChanged.bind(this);
     this.onMapMounted = this.onMapMounted.bind(this);
+    this.onMarkerMounted = this.onMarkerMounted.bind(this);
+    this.setChangeStartLatLng = this.setChangeStartLatLng.bind(this);
   }
 
 
@@ -78,6 +93,20 @@ export class Map extends React.Component {
     fetch('/api/hikes')
       .then(res => res.json())
       .then(hikes => this.setState({hikes}, () =>  {
+        //tveir markerar sem verda notadir vid ad setja thgar gert er add Hike
+        var nHike1 = {pos:{lng:null, lat:null},key:1,markerAni:0}
+        var nHike2 = {pos:{lng:null, lat:null},key:2, markerAni:0}
+
+        //thessi verdur notadur til ad syna endLat thegar thad a vid
+        var nHike3 = {pos:{lng:null, lat:null},key:3, markerAni:0}
+        hikes.push(nHike1);
+        hikes.push(nHike2);
+        hikes.push(nHike3)
+        for(var i=0; i<this.state.hikes.length; i++){
+          var h = this.state.hikes[i];
+          this.state.hikes[i]['markerAni'] = 0;
+          this.state.hikes[i]['isOpen'] = false;
+        }
        }
     ));
   }
@@ -87,18 +116,57 @@ export class Map extends React.Component {
     return ref;
   }
 
+  onMarkerMounted(ref){
+    // console.log('markermount', ref)
+    var markers = this.state.markers;
+    markers.push(ref);
+    this.setState({markers});
+  }
 
   handleZoomChanged(){
     this.setState({zoom:this.state.map.getZoom()})
-    if(this.state.map.getZoom() != 6){
+    if(this.state.map.getZoom() !== 6){
       this.setState({isZoomed: true})
     }
   }
 
+
   handleMarkerClick(marker){
+    //close all newMarkerPos
+    for(var i=0; i<this.state.hikes.length; i++){
+      this.state.hikes[i].isOpen = false;
+      this.state.hikes[i].markerAni = 0;
+    }
+    marker.isOpen = true;
+    //animation
+    marker.markerAni = 4;
+
     this.setState({selectedMarker: marker})
-    this.setState({initPos:marker.pos, zoom:10, isZoomed: true});
-    console.log(this.state.icon);
+    if(this.state.map.getZoom() < 10){
+      this.setState({initPos:marker.pos, zoom:10, isZoomed: true});
+      //marker.markerAni = 0;
+    } else if(this.state.map.getZoom() < 14) {
+
+      var zo = this.state.map.getZoom();
+      this.setState({initPos:marker.pos, zoom: zo+2,isZoomed: true})
+    }
+
+    //syna endapunkt
+    var hikes = this.state.hikes;
+    if(marker.endLat && marker.endLng){
+      hikes[this.state.hikes.length - 3].pos = {lat: marker.endLat, lng: marker.endLng}
+      hikes[this.state.hikes.length - 3].markerAni = 4;
+      hikes[this.state.hikes.length - 3].title = 'End of ' + marker.title;
+      hikes[this.state.hikes.length - 3].isOpen = true;
+      var bounds = new google.maps.LatLngBounds();
+      bounds.extend({lat: marker.endLat, lng: marker.endLng});
+      bounds.extend({lat: marker.pos.lat, lng:marker.pos.lng})
+      this.state.map.fitBounds(bounds);
+    } else {
+
+    }
+
+    this.setState({hikes});
   }
 
 //ef ytt er a marker og fara til baka
@@ -108,18 +176,42 @@ export class Map extends React.Component {
 
 //fyrir ad velja nyjan marker
   handleMapClicked(obj){
-      this.props.sendMarker({lat:obj.latLng.lat(), lng:obj.latLng.lng()})
-      console.log('map clicked')
+      //senda a addhike
+      this.props.sendMarker({ lng:obj.latLng.lng(),lat:obj.latLng.lat()})
+
+      //lata marker koma thar sem ytt er a map thegar verid er ad baeta nyju hike
+      var hikes = this.state.hikes;
+      if(hikes.length > 2 && this.state.addingStartLatLng){
+        hikes[hikes.length - 2].pos = {lng:obj.latLng.lng(),lat:obj.latLng.lat()};
+      } else if(hikes.length > 2 && this.state.addingEndLatLng){
+        hikes[hikes.length - 1].pos = {lng:obj.latLng.lng(),lat:obj.latLng.lat()};
+      }
+
+      this.setState({hikes});
+
+      //TODO finna betri leid til ad rendra googleMap component
+      var zo = this.state.map.getZoom();
+      this.setState({zoom: zo + 4})
+      this.setState({zoom: zo})
   }
 
+  setChangeStartLatLng(bool){
+    this.setState({addingStartLatLng: bool})
+  }
+
+  setChangeEndLatLng(bool){
+    this.setState({addingEndLatLng: bool})
+  }
 
   render() {
-
+    console.log('render')
     const zoomBtn = this.state.isZoomed ? (
       <ZoomBackBtn onClick={this.handleZoomBack} />
     ) : (
       <span></span>
     );
+
+
 
     return (
       <div className="main-container">
@@ -133,6 +225,8 @@ export class Map extends React.Component {
           defZoom={6}
           zoom={this.state.zoom}
           icon={this.state.icon}
+          onMarkerMounted={this.onMarkerMounted}
+          ani={this.state.markerAni}
         />
         {zoomBtn}
         <HikeInfo
