@@ -20,11 +20,11 @@ export class HikeInfo extends React.Component {
       if(info){
 
 
-          const HasSameStartFinish = info.HasSameStartFinish ? (
-              <li>Hike has the same starting and finsh point</li>
+          const HasSameStartFinish = info.hasSameStartFinish ? (
+              <li>Hike has the same starting and finish point</li>
             ) : (
               <div>
-              <li>Hike has the same starting and finsh point</li>
+              <li>Hike does not has the same starting and finish point</li>
               <li>The end point is lat: {info.endLat}, lng: {info.endLng}</li>
               </div>
             )
