@@ -12,10 +12,6 @@ export class HikeInfo extends React.Component {
 
     render(){
       const info = this.props.info;
-
-
-
-
       console.log(info)
       if(info){
 
