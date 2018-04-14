@@ -93,6 +93,8 @@ export class Map extends React.Component {
     fetch('/api/hikes')
       .then(res => res.json())
       .then(hikes => this.setState({hikes}, () =>  {
+        console.log('did mount');
+        console.log(hikes);
         //tveir markerar sem verda notadir vid ad setja thgar gert er add Hike
         var nHike1 = {pos:{lng:null, lat:null},key:1,markerAni:0}
         var nHike2 = {pos:{lng:null, lat:null},key:2, markerAni:0}
@@ -176,6 +178,7 @@ export class Map extends React.Component {
 
 //fyrir ad velja nyjan marker
   handleMapClicked(obj){
+      console.log(this.state.hikes)
       //senda a addhike
       this.props.sendMarker({ lng:obj.latLng.lng(),lat:obj.latLng.lat()})
 
