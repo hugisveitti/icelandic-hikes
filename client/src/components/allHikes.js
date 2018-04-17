@@ -47,10 +47,8 @@ export class AllHikes extends React.Component {
          </div>
          {hike.showHike?
            <div>
-              <p>
-                {hike.description}
-              </p>
               <ul>
+                <li className="description">{hike.description}</li>
                 <li>Difficulty is {hike.difficulty}</li>
                 <li>Length is {hike.length} meters</li>
                 <li>Duration is {hike.duration}</li>
@@ -76,7 +74,7 @@ export class AllHikes extends React.Component {
     //TODO sort eftir stafrofsrod
 
     return(
-      <div>
+      <div className="all-hikes">
         <ul>
           {titles}
 

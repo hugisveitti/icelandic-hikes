@@ -24,6 +24,7 @@ export class AddHike extends React.Component {
       changingEndPoint:false,
       changingStartPoint:false,
       notificationSystem:null,
+      hasRivercrossing:false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -46,6 +47,14 @@ export class AddHike extends React.Component {
       toast.error("To change the " + name + " you can only type numbers.", {
         position: toast.POSITION.TOP_CENTER
       });
+    }
+  }
+
+  setBool(event){
+    if(event.target.value === "true"){
+      this.setState({[event.target.name]:true})
+    } else {
+      this.setState({[event.target.name]:false})
     }
   }
 
@@ -140,9 +149,10 @@ export class AddHike extends React.Component {
           hasSameStartFinish: this.state.hasSameStartFinish,
           endLat:this.state.endLat,
           endLng:this.state.endLng,
+          hasRivercrossing: this.state.hasRivercrossing,
         };
          // fetch('http://localhost/api/addHikes', {
-        fetch('http://206.189.23.79/api/addHikes', {
+         fetch('http://206.189.23.79/api/addHikes', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -272,6 +282,17 @@ export class AddHike extends React.Component {
             </label>
             <label>
             <input placeholder="Duration" type="text" name="duration" value={this.state.duration} onChange={this.handleChange} />
+            </label>
+          </div>
+
+          <div className="hike">
+            <label className="info">
+              Are there any river crossings?
+              <div onChange={this.setBool.bind(this)}>
+                <br />
+                <input type="radio" value="true" name="hasRivercrossing" /> Yes
+                <input type="radio" value="false" name="hasRivercrossing" /> No
+              </div>
             </label>
           </div>
 

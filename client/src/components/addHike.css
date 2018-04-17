@@ -12,9 +12,6 @@ label{
   display: block;
   position: relative;
   right:0px;
-  /* float:left;
-  clear:both; */
-  /* margin-left: 100px; */
   padding-bottom: 20px;
 }
 
@@ -47,11 +44,11 @@ input:focus::placeholder{
 
 }
 
-span{
+/* span{
     align-items: center;
     position: fixed;
     right:5px;
-}
+} */
 
 textarea{
   width: 300px;

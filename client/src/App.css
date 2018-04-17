@@ -1,15 +1,18 @@
-.App {
-  text-align: center;
+html, body {
+  heigth:100%;
+  margin:0;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.App {
+  text-align: center;
+  height: 100%;
+  margin: 0;
 }
 
 .App-header {
-  background-color: #222;
-  height: 50px;
+  /* background-color: #222; */
+  background-color:#266858;
+  height: 40px;
   padding: 20px;
   color: white;
   font-family: helvetica;
@@ -23,10 +26,6 @@
   font-size: large;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
 
 h1 {
   display: inline;
@@ -52,4 +51,20 @@ span:hover{
   border-radius:3px; */
 
 
+}
+
+footer{
+
+  background-color: #5c7c74;
+  color: white;
+  height: 30px;
+  /* width: 100%;
+  margin:auto; */
+  padding: 3px;
+}
+
+p{
+    display: inline;
+    font-size: 12px;
+    margin:auto;
 }

@@ -88,6 +88,7 @@ class App extends Component {
     )
 
     return (
+
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Hikes in Iceland</h1>
@@ -101,7 +102,9 @@ class App extends Component {
 
         {addHikeElement}
         {addHikeBtn}
-
+        <footer className="App-footer">
+          <p>Site made by Hugi Holm, if you have any suggestions contact me: hugiholm1@gmail.com</p>
+        </footer>
       </div>
     );
   }

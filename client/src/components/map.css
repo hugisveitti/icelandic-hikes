@@ -5,13 +5,6 @@
   padding-right:10px;
 }
 
-/* button{
-  margin:10px;
-  padding:5px;
-  background-color: #42f4df;
-  color: #2a3836;
-  border-style:ridge;
-} */
 
 
 
@@ -33,14 +26,9 @@ button{
 }
 
 button:hover{
-  /* border-width: 2px; */
   border-color: #446661;
-  /* border-top: 1px;
-  border-right: 1px; */
-  /* border-right: 2px; */
-  border-bottom: 2px;
-  /* border-right:1px; */
-  border-style:solid
+  border-bottom: 3px solid;
+  border-left: 1px solid gray;
 }
 
 
@@ -50,4 +38,13 @@ button:hover{
 
 .gm-style-cc{
   color:red;
+}
+
+div.gmnoprint.gm-style-cc{
+  color:red;
+}
+
+.gmnoscreen{
+  color:red;
+  background-color: red;
 }

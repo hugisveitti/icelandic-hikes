@@ -101,4 +101,4 @@ app.get('/', (req,res) => {
 const port = 5000;
 app.listen(port, () => `Server running on port ${port}`);
 
- app.use('/', router);
+ // app.use('/', router);
