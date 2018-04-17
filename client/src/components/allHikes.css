@@ -1,6 +1,6 @@
-ul{
+/* ul{
   background-color: white;
-}
+} */
 
 
 
@@ -17,4 +17,9 @@ ul{
 li:hover{
   background-color: #526862;
   color:white;
+}
+
+h4{
+  padding:0;
+  margin:0;
 }

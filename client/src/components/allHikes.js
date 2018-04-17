@@ -1,75 +1,88 @@
 import React from 'react';
 import './allHikes.css'
-//
-// const AboutHike = (
-//
-//     <div>hyejo</div>
-//
-// )
+
+
 
 export class AllHikes extends React.Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
+    console.log(props)
     this.state = {
       hikes: [],
-      hikeclicked: false,
-      hike:[]
+      lastHike:[],
+      show:[]
     }
     this.showHike = this.showHike.bind(this);
-    this.oneHikeInfo = this.oneHikeInfo.bind(this);
   }
 
   showHike(hike, event){
-    console.log(event.target.parent)
-    //ef ytt er a sama hike eda annad
-    if(hike === this.state.hike){
-      this.setState({hikeclicked:false})
-    } else {
-      this.setState({hikeclicked:true})
-    }
-    console.log(hike);
-    this.setState({hike})
-  }
+    //fela seinasta hike
+    var lastHike = this.state.lastHike;
+    lastHike['showHike'] = false;
+    this.setState({lastHike});
 
-  oneHikeInfo(hike){
-    console.log('one hike')
-    return(
-      <div>
-        YOOOOOOO
-      </div>
-    )
+    //syna thetta hike
+    hike['showHike'] = true;
+    //ef ytt er a sama hike eda annad
+    if(hike === this.state.lastHike){
+      hike['showHike'] = false;
+    }
+
+    this.setState({lastHike: hike})
   }
 
 
   render(){
-
     //infoid sem kemur thar manneskja ytir a hike
-    const oneHikeInfo = this.state.hikeclicked ? (
-      <div>info</div>
-    ) : (
-      <a />
-    )
+
+    var id = 0;
+    console.lo
+    const titles = this.props.hikes.map((hike) =>
+    <div className="allhikes-li">
+      {hike.title?<li
+         id={id++}
+         onClick={(e) => this.showHike(hike, e)}>
+         <div>
+          <h4>{hike.title}</h4>
+         </div>
+         {hike.showHike?
+           <div>
+              <p>
+                {hike.description}
+              </p>
+              <ul>
+                <li>Difficulty is {hike.difficulty}</li>
+                <li>Length is {hike.length} meters</li>
+                <li>Duration is {hike.duration}</li>
+                <li>Elevation is {hike.elevation} meters</li>
+
+                  {hike.isLoop?<li>The hike is a loop</li>:
+                   <div>
+                    <li>The hike is not a loop</li>
+                     <li>
+                     {( hike.hasSameStartFinish)?'The hike has the same start and finish point':
+                      'The hike does not have the same start and finish point'}
+                      </li>
+                   </div>
+                   }
+
+
+             </ul>
+           </div>: ''}
+         </li>:''}
+    </div>
+    );
 
     //TODO sort eftir stafrofsrod
 
-//passa ad syna ekki tomu markerana
-    const titles = this.props.hikes.map((hike) =>
-      <div className="allhikes-li">
-        {hike.title?<li
-           onClick={(e) => this.showHike(hike, e)}>
-           {hike.title}
-           {hike.showInfo?{oneHikeInfo}: ''}
-           {oneHikeInfo}
-          
-           </li>:''}
-      </div>
-    )
+
 
     console.log('allhikes render', this.state.hikes);
     return(
       <div>
         <ul>
           {titles}
+
         </ul>
       </div>
     )
