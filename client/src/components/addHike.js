@@ -58,7 +58,6 @@ export class AddHike extends React.Component {
   }
 
   setHasSameStartFinish(event){
-    console.log('sethassame', event.target.value)
     if(event.target.value === "true"){
       this.setState({hasSameStartFinish: true});
     } else {
@@ -126,7 +125,6 @@ export class AddHike extends React.Component {
   handleSubmit(event){
       console.log('submit')
       event.preventDefault();
-      console.log(this.state)
     if(this.state.title !== "" && this.state.length > 0 && this.state.duration !== '' ){
         console.log('submitted tyring')
         var sendData = {
@@ -143,8 +141,8 @@ export class AddHike extends React.Component {
           endLat:this.state.endLat,
           endLng:this.state.endLng,
         };
-         // fetch('http://localhost/api/addHikes', {
-        fetch('http://206.189.23.79/api/addHikes', {
+         fetch('http://localhost/api/addHikes', {
+        // fetch('http://206.189.23.79/api/addHikes', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -175,7 +173,6 @@ export class AddHike extends React.Component {
 
 
   render(){
-    console.log(this.state)
 
     const notLoop = !this.state.isLoop ? (
       <label>

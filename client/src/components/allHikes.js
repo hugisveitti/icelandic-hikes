@@ -6,7 +6,6 @@ import './allHikes.css'
 export class AllHikes extends React.Component {
   constructor(props){
     super(props);
-    console.log(props)
     this.state = {
       hikes: [],
       lastHike:[],
@@ -36,10 +35,11 @@ export class AllHikes extends React.Component {
     //infoid sem kemur thar manneskja ytir a hike
 
     var id = 0;
-    console.lo
+    var k = 0
     const titles = this.props.hikes.map((hike) =>
-    <div className="allhikes-li">
+    <div key={k++} className="allhikes-li">
       {hike.title?<li
+         key={id}
          id={id++}
          onClick={(e) => this.showHike(hike, e)}>
          <div>
@@ -75,9 +75,6 @@ export class AllHikes extends React.Component {
 
     //TODO sort eftir stafrofsrod
 
-
-
-    console.log('allhikes render', this.state.hikes);
     return(
       <div>
         <ul>

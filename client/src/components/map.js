@@ -183,7 +183,6 @@ export class Map extends React.Component {
 
 //fyrir ad velja nyjan marker
   handleMapClicked(obj){
-      console.log(this.state.hikes)
       //senda a addhike
       this.props.sendMarker({ lng:obj.latLng.lng(),lat:obj.latLng.lat()})
 
@@ -210,15 +209,12 @@ export class Map extends React.Component {
   }
 
   render() {
-    console.log('mappjs render')
     const zoomBtn = this.state.isZoomed ? (
       <ZoomBackBtn onClick={this.handleZoomBack} />
     ) : (
       <span></span>
     );
 
-
-    console.log(this.state.hikes)
     return (
       <div className="main-container">
         <MyMapComponent
