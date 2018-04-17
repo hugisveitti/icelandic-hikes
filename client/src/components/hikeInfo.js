@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Map from './map';
+import React from 'react';
+import './hikeInfo.css'
 
 export class HikeInfo extends React.Component {
   constructor() {
@@ -14,12 +14,12 @@ export class HikeInfo extends React.Component {
       const info = this.props.info;
       if(info){
 
-
-          const HasSameStartFinish = info.hasSameStartFinish ? (
+          console.log(info.endLng)
+          const HasSameStartFinish = !info.endLng  ? (
               <li>Hike has the same starting and finish point</li>
             ) : (
               <div>
-              <li>Hike does not has the same starting and finish point</li>
+              <li>Hike does not have the same starting and finish point</li>
               <li>The end point is lat: {info.endLat}, lng: {info.endLng}</li>
               </div>
             )
@@ -33,15 +33,17 @@ export class HikeInfo extends React.Component {
               </div>
             )
         return (
-          <div>
+          <div className="hike-info">
             <h1>{info.title}</h1>
+            <p>
+              {info.description}
+            </p>
             <ul>
               <li>Difficulty is {info.difficulty}</li>
               <li>Length is {info.length} meters</li>
               <li>Duration is {info.duration}</li>
               <li>Elevation is {info.elevation} meters</li>
               {IsLoop}
-              <li>Description: {info.description}</li>
             </ul>
           </div>
         )

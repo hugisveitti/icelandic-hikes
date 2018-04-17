@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import Map from './components/map'
 import AddHike from './components/addHike'
-import {NotificationContainer} from 'react-notifications';
 
 
 function AddHikeButton(props){
@@ -36,6 +35,7 @@ class App extends Component {
     this.setChangingEndLatLng = this.setChangingEndLatLng.bind(this);
     this.addHikeChild = React.createRef();
     this.mapRef = React.createRef();
+    this.showAbout = this.showAbout.bind(this);
   }
 
   handleAddHike(){
@@ -63,6 +63,10 @@ class App extends Component {
     this.addHikeChild.current.getPos(this.state.newMarkerPos);
   }
 
+  showAbout(){
+
+  }
+
   render() {
     const addHikeBtn = !this.state.addingHike ? (
       <AddHikeButton onClick={this.handleAddHike} />
@@ -85,9 +89,9 @@ class App extends Component {
 
     return (
       <div className="App">
-
         <header className="App-header">
           <h1 className="App-title">Hikes in Iceland</h1>
+
         </header>
         <Map
           addingHike={this.addingHike}

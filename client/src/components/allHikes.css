@@ -1,0 +1,20 @@
+ul{
+  background-color: white;
+}
+
+
+
+.allhikes-li:nth-child(odd){
+  background-color: #80baaa;
+}
+
+.allhikes-li{
+  background-color: #a5d1c4;
+}
+
+
+
+li:hover{
+  background-color: #526862;
+  color:white;
+}

@@ -37,6 +37,7 @@ input[type="text"]{
   border-color: #788291;
   width:50%;
   max-width: 400px;
+  min-width: 300px;
   height:30px;
   font-size: 16px;
 }
@@ -106,6 +107,7 @@ div.hike{
     padding-top:10px;
     padding-bottom:10px;
     width:50%;
+    min-width: 500px;
     margin:auto;
     background-color:#59a87f;
 }

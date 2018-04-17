@@ -1,11 +1,11 @@
 /* global google  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import './map.css';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from 'react-google-maps';
-import { compose, withProps, withState, withHandlers } from 'recompose';
-import HikeInfo from './hikeInfo.js'
-
+import { compose, withProps } from 'recompose';
+import HikeInfo from './hikeInfo.js';
+import AllHikes from './allHikes.js';
 
 //const apiKey = 'AIzaSyARkgGYzmI6y6CJoiDsIeEd5bc6s3r3_QI';
 
@@ -38,7 +38,6 @@ var MyMapComponent = compose(
         ref={props.onMarkerMounted}
         noRedraw={false}
         animation={hike.markerAni}
-
       >
 
       {hike.isOpen && <InfoWindow>
@@ -93,8 +92,7 @@ export class Map extends React.Component {
     fetch('/api/hikes')
       .then(res => res.json())
       .then(hikes => this.setState({hikes}, () =>  {
-        console.log('did mount');
-        console.log(hikes);
+
         //tveir markerar sem verda notadir vid ad setja thgar gert er add Hike
         var nHike1 = {pos:{lng:null, lat:null},key:1,markerAni:0}
         var nHike2 = {pos:{lng:null, lat:null},key:2, markerAni:0}
@@ -105,9 +103,12 @@ export class Map extends React.Component {
         hikes.push(nHike2);
         hikes.push(nHike3)
         for(var i=0; i<this.state.hikes.length; i++){
-          var h = this.state.hikes[i];
-          this.state.hikes[i]['markerAni'] = 0;
-          this.state.hikes[i]['isOpen'] = false;
+          hikes = this.state.hikes;
+          hikes[i]['markerAni'] = 0;
+          hikes[i]['isOpen'] = false;
+          this.setState({hikes})
+          // this.state.hikes[i]['markerAni'] = 0;
+          // this.state.hikes[i]['isOpen'] = false;
         }
        }
     ));
@@ -136,8 +137,12 @@ export class Map extends React.Component {
   handleMarkerClick(marker){
     //close all newMarkerPos
     for(var i=0; i<this.state.hikes.length; i++){
-      this.state.hikes[i].isOpen = false;
-      this.state.hikes[i].markerAni = 0;
+      var hikes = this.state.hikes;
+      hikes[i].isOpen = false;
+      hikes[i].markerAni = 0;
+      this.setState({hikes})
+      // this.state.hikes[i].isOpen = false;
+      // this.state.hikes[i].markerAni = 0;
     }
     marker.isOpen = true;
     //animation
@@ -154,7 +159,7 @@ export class Map extends React.Component {
     }
 
     //syna endapunkt
-    var hikes = this.state.hikes;
+    hikes = this.state.hikes;
     if(marker.endLat && marker.endLng){
       hikes[this.state.hikes.length - 3].pos = {lat: marker.endLat, lng: marker.endLng}
       hikes[this.state.hikes.length - 3].markerAni = 4;
@@ -189,9 +194,7 @@ export class Map extends React.Component {
       } else if(hikes.length > 2 && this.state.addingEndLatLng){
         hikes[hikes.length - 1].pos = {lng:obj.latLng.lng(),lat:obj.latLng.lat()};
       }
-
       this.setState({hikes});
-
       //TODO finna betri leid til ad rendra googleMap component
       var zo = this.state.map.getZoom();
       this.setState({zoom: zo + 4})
@@ -207,7 +210,7 @@ export class Map extends React.Component {
   }
 
   render() {
-    console.log('render')
+    console.log('mappjs render')
     const zoomBtn = this.state.isZoomed ? (
       <ZoomBackBtn onClick={this.handleZoomBack} />
     ) : (
@@ -215,7 +218,7 @@ export class Map extends React.Component {
     );
 
 
-
+    console.log(this.state.hikes)
     return (
       <div className="main-container">
         <MyMapComponent
@@ -234,6 +237,10 @@ export class Map extends React.Component {
         {zoomBtn}
         <HikeInfo
           info = {this.state.selectedMarker}
+        />
+        <AllHikes
+          hikes = {this.state.hikes}
+          num = {7}
         />
       </div>
     )

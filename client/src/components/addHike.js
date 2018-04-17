@@ -27,12 +27,26 @@ export class AddHike extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChangeNumber = this.handleChangeNumber.bind(this);
   }
 
 
   handleChange(event){
     const name = event.target.name;
     this.setState({[name]: event.target.value})
+  }
+
+  handleChangeNumber(event){
+    const value = event.target.value;
+    const name = event.target.name;
+    const val = parseInt(value.substring(value.length-1, value.length), 10);
+    if(val){
+      this.setState({[name]: value})
+    } else {
+      toast.error("To change the " + name + " you can only type numbers.", {
+        position: toast.POSITION.TOP_CENTER
+      });
+    }
   }
 
   setIsLoop(event){
@@ -44,6 +58,7 @@ export class AddHike extends React.Component {
   }
 
   setHasSameStartFinish(event){
+    console.log('sethassame', event.target.value)
     if(event.target.value === "true"){
       this.setState({hasSameStartFinish: true});
     } else {
@@ -113,13 +128,13 @@ export class AddHike extends React.Component {
       event.preventDefault();
       console.log(this.state)
     if(this.state.title !== "" && this.state.length > 0 && this.state.duration !== '' ){
-        console.log('submitted')
+        console.log('submitted tyring')
         var sendData = {
           title:this.state.title,
-          length:parseInt(this.state.length),
+          length:parseInt(this.state.length, 10),
           lat:this.state.lat,
           lng:this.state.lng,
-          elevation:parseInt(this.state.elevation),
+          elevation:parseInt(this.state.elevation, 10),
           duration:this.state.duration,
           difficulty:this.state.difficulty,
           description:this.state.description,
@@ -128,7 +143,7 @@ export class AddHike extends React.Component {
           endLat:this.state.endLat,
           endLng:this.state.endLng,
         };
-        fetch('http://localhost/api/addHikes', {
+         fetch('http://localhost/api/addHikes', {
         // fetch('http://206.189.23.79/api/addHikes', {
         method: 'POST',
         headers: {
@@ -197,6 +212,12 @@ export class AddHike extends React.Component {
       <div className="add-hike-container">
         <form>
           <div className="hike">
+            <label className="info">
+              If you want to add a hike to the database, please fill in the appropriate information.
+              Thank you for your help!
+            </label>
+          </div>
+          <div className="hike">
             <label className="title">
               Name of the Hike
             </label>
@@ -204,17 +225,15 @@ export class AddHike extends React.Component {
                 <input placeholder="Name of Hike" type="text" name="title" title={this.state.title} onChange={this.handleChange} />
               </label>
           </div>
-
-
           <div className="hike">
             <label className="info">
               The starting point of the hike can either be typed in or marked with the map.
             </label>
             <label>
-              <input placeholder="Longitude" type="text" name="lng" value={this.state.lng !== 0 ? this.state.lng : ''} onChange={this.handleChange} />
+              <input placeholder="Longitude" type="text" name="lng" value={this.state.lng !== 0 ? this.state.lng : ''} onChange={this.handleChangeNumber} />
             </label>
             <label>
-              <input placeholder="Latitude" type="text" name="lat" value={this.state.lat !== 0 ? this.state.lat : ''} onChange={this.handleChange} />
+              <input placeholder="Latitude" type="text" name="lat" value={this.state.lat !== 0 ? this.state.lat : ''} onChange={this.handleChangeNumber} />
             </label>
             <button onClick={this.changeStartPoint.bind(this)} style={this.state.changingStartPoint ? {background: "#697487", color:"white"} : {color:"black"}}>
               Change Start point by clicking map
@@ -237,7 +256,7 @@ export class AddHike extends React.Component {
               The length should be in meters and only typed in numbers.
             </label>
             <label>
-              <input placeholder="length" type="text" name="length" value={this.state.length > 0 ? this.state.length : ''} onChange={this.handleChange} />
+              <input placeholder="length" type="text" name="length" value={this.state.length > 0 ? this.state.length : ''} onChange={this.handleChangeNumber} />
             </label>
           </div>
 
@@ -246,7 +265,7 @@ export class AddHike extends React.Component {
               The elevation should be in meters and only typed in numbers.
             </label>
             <label>
-              <input placeholder="Elevation" type="text" name="elevation" value={this.state.elevation> 0 ? this.state.elevation : ''} onChange={this.handleChange} />
+              <input placeholder="Elevation" type="text" name="elevation" value={this.state.elevation> 0 ? this.state.elevation : ''} onChange={this.handleChangeNumber} />
             </label>
           </div>
 
@@ -272,7 +291,6 @@ export class AddHike extends React.Component {
               </select>
             </label>
           </div>
-
           <div className="hike">
             <label className="info">
               Write a good desctiption of the hike. Please write the way to get to the beginning of the hike.
@@ -281,7 +299,6 @@ export class AddHike extends React.Component {
               <textarea placeholder="Description" name="description" value={this.state.description} onChange={this.handleChange} />
             </label>
           </div>
-
           <button className="submit" onClick={this.handleSubmit}>
             Submit
           </button>

@@ -27,3 +27,25 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+h1 {
+  display: inline;
+  clear:both;
+}
+
+span{
+
+  position: absolute; 
+  padding-right: 20px;
+  padding:10px;
+  margin-right: 5px;
+}
+
+span:hover{
+  /* border-color: white;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+  border-right: 2px solid;
+  border-radius:3px; */
+  background-color: #3a4659;
+}
