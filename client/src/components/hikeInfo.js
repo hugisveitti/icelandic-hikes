@@ -1,5 +1,5 @@
 import React from 'react';
-// import './hikeInfo.css'
+import './hikeInfo.css'
 
 export class HikeInfo extends React.Component {
   constructor() {
