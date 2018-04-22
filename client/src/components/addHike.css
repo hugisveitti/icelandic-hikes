@@ -1,5 +1,9 @@
 .add-hike-container{
-  padding:15px;
+  width:40%;
+  min-width: 300px;
+  margin:auto;
+  padding: 0;
+
 }
 
 form{
@@ -32,11 +36,14 @@ input[type="text"]{
   border: 2px;
   border-style: solid;
   border-color: #788291;
-  width:50%;
+  /* width:50%;
   max-width: 400px;
-  min-width: 300px;
+  min-width: 300px; */
+  width:30%;
+  min-width: 250px;
   height:30px;
   font-size: 16px;
+  margin:0;
 }
 
 
@@ -96,15 +103,15 @@ hr{
 label.info{
 
   margin: auto;
-  width:35%;
+  width:100%;
   font-size:14px;
 }
 
 div.hike{
     padding-top:10px;
     padding-bottom:10px;
-    width:50%;
-    min-width: 500px;
+    /* width:50%;
+    min-width: 500px; */
     margin:auto;
     background-color:#59a87f;
 }

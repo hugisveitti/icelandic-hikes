@@ -417,6 +417,7 @@ export class Map extends React.Component {
             onClick={this.toggleSideNav.bind(this)}>
           </div>
           <SideHikes
+            className="side-nav"
             hikes={this.state.hikes}
             show={this.state.showSideNav}
             setFromListSelectedMarker={this.setFromListSelectedMarker.bind(this)}
@@ -426,10 +427,6 @@ export class Map extends React.Component {
             onClick={this.toggleSideNav.bind(this)}
             style={{display:this.state.showSideNav?'block':'none'}}>
           </div>
-
-
-
-
       </div>
     )
   }

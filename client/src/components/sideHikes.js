@@ -1,7 +1,4 @@
 import React from 'react';
-import SideNav from 'react-simple-sidenav';
-import {slide as Menu} from 'react-burger-menu';
-import Sidebar from 'react-sidebar';
 import './sideHikes.css';
 
 export class SideHikes extends React.Component {
@@ -45,6 +42,7 @@ export class SideHikes extends React.Component {
        >
        <h4 className="side-title">All Hikes</h4>
       {all_hikes}
+      <br />
       </div>
     )
   }
