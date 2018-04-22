@@ -22,7 +22,7 @@ button{
   margin-bottom: 10px;
   padding: 5px;
   margin-top: 20px;
-  width:120px;
+  width:150px;
 }
 
 button:hover{
@@ -47,4 +47,42 @@ div.gmnoprint.gm-style-cc{
 .gmnoscreen{
   color:red;
   background-color: red;
+}
+
+.side-nav-nibbi{
+  position: fixed;
+
+  margin:0;
+  padding:0;
+  top:50%;
+  width:30px;
+  height:30px;
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  padding: 3px;
+
+}
+
+.nibbi-opna{
+  left:-20px;
+  background-color: #266858;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.nibbi-loka{
+  left:10px;
+  opacity: 100;
+  background-color:none;
+
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.nibbi-loka:hover{
+  border-color: #195150;
+}
+
+.nibbi-opna:hover{
+  background-color:#67af9c;
 }

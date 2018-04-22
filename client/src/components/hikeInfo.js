@@ -9,12 +9,14 @@ export class HikeInfo extends React.Component {
     };
   }
 
+  closeInfo(){
+    this.props.setSelectedMarker(null);
+  }
 
     render(){
       const info = this.props.info;
       if(info){
 
-          console.log(info.endLng)
           const HasSameStartFinish = !info.endLng  ? (
               <li>Hike has the same starting and finish point</li>
             ) : (
@@ -32,9 +34,13 @@ export class HikeInfo extends React.Component {
               {HasSameStartFinish}
               </div>
             )
+
+            //const HikeHasRiverCrossings = info.
+
         return (
           <div className="hike-info">
-            <h1>{info.title}</h1>
+            <h1 className="hike-info-title">{info.title}</h1>
+            <button className="close-hike-info" onClick={this.closeInfo.bind(this)}>X</button>
             <ul>
               <li className="description">{info.description}</li>
               <li>Difficulty is {info.difficulty}</li>

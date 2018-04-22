@@ -19,15 +19,18 @@ export class AllHikes extends React.Component {
     var lastHike = this.state.lastHike;
     lastHike['showHike'] = false;
     this.setState({lastHike});
-
-    //syna thetta hike
-    hike['showHike'] = true;
-    //ef ytt er a sama hike eda annad
+    //ef ytt er a sama hike tha fer thad, ef ekki
     if(hike === this.state.lastHike){
       hike['showHike'] = false;
+      //ef ytt er a sama hike thrisvar i rod
+      this.setState({lastHike:[]});
+    } else { //ef ytt er a nytt hike
+      //syna thetta hike
+      hike['showHike'] = true;
+      this.setState({lastHike: hike});
     }
 
-    this.setState({lastHike: hike})
+    this.props.setFromListSelectedMarker(hike);
   }
 
 
@@ -38,12 +41,12 @@ export class AllHikes extends React.Component {
     var k = 0
     const titles = this.props.hikes.map((hike) =>
     <div key={k++} className="allhikes-li">
-      {hike.title?<li
+      {hike.title && hike.length?<li
          key={id}
          id={id++}
          onClick={(e) => this.showHike(hike, e)}>
          <div>
-          <h4>{hike.title}</h4>
+          <h4 className="all-hikes-title">{hike.title}</h4>
          </div>
          {hike.showHike?
            <div>
@@ -63,8 +66,6 @@ export class AllHikes extends React.Component {
                       </li>
                    </div>
                    }
-
-
              </ul>
            </div>: ''}
          </li>:''}

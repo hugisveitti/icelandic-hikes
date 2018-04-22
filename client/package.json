@@ -4,8 +4,12 @@
   "private": true,
   "dependencies": {
     "react": "^16.2.0",
+    "react-burger-menu": "^2.4.2",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.0.17"
+    "react-scripts": "1.0.17",
+    "react-sidebar": "^2.3.2",
+    "react-sidenav": "^2.1.2",
+    "react-simple-sidenav": "^0.1.6"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -13,5 +17,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://206.189.23.79:5000"
+  "proxy": "http://localhost:5000"
 }

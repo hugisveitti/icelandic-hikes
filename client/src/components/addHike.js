@@ -25,6 +25,7 @@ export class AddHike extends React.Component {
       changingStartPoint:false,
       notificationSystem:null,
       hasRivercrossing:false,
+      driveHasRivercrossing:false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -41,10 +42,13 @@ export class AddHike extends React.Component {
     const value = event.target.value;
     const name = event.target.name;
     const val = parseInt(value.substring(value.length-1, value.length), 10);
-    if(val){
+    const valStr = value.substring(value.length-1, value.length);
+//verduer ad vera svona svo virki
+    if(val || valStr === "0" || valStr ===""){
       this.setState({[name]: value})
     } else {
       toast.error("To change the " + name + " you can only type numbers.", {
+        //TODO breyta thannig taost kemur ekki ef annad toast er
         position: toast.POSITION.TOP_CENTER
       });
     }
@@ -150,9 +154,10 @@ export class AddHike extends React.Component {
           endLat:this.state.endLat,
           endLng:this.state.endLng,
           hasRivercrossing: this.state.hasRivercrossing,
+          driveHasRivercrossing:this.state.driveHasRivercrossing
         };
-         // fetch('http://localhost/api/addHikes', {
-         fetch('http://206.189.23.79/api/addHikes', {
+         fetch('http://localhost/api/addHikes', {
+         // fetch('http://206.189.23.79/api/addHikes', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -287,11 +292,22 @@ export class AddHike extends React.Component {
 
           <div className="hike">
             <label className="info">
-              Are there any river crossings?
+              Are there any river crossings during the hike?
               <div onChange={this.setBool.bind(this)}>
                 <br />
                 <input type="radio" value="true" name="hasRivercrossing" /> Yes
                 <input type="radio" value="false" name="hasRivercrossing" /> No
+              </div>
+            </label>
+          </div>
+
+          <div className="hike">
+            <label className="info">
+              Are there any river crossings during the drive to get to the hike?
+              <div onChange={this.setBool.bind(this)}>
+                <br />
+                <input type="radio" value="true" name="driveHasRivercrossing" /> Yes
+                <input type="radio" value="false" name="driveHasRivercrossing" /> No
               </div>
             </label>
           </div>

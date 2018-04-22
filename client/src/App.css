@@ -1,6 +1,17 @@
-html, body {
-  heigth:100%;
-  margin:0;
+html {
+  height:100%;
+}
+
+body{
+  position: relative;
+  min-height: 100%;
+}
+
+.content{
+  min-height: 100%;
+  position: relative;
+  margin: 0 auto;
+  padding-bottom: 25px;
 }
 
 .App {
@@ -57,10 +68,17 @@ footer{
 
   background-color: #5c7c74;
   color: white;
-  height: 30px;
+
   /* width: 100%;
   margin:auto; */
   padding: 3px;
+
+  /* height: 50px; */
+  position: absolute;
+  width:100%;
+  bottom: 0;
+  left:0;
+  right:0;
 }
 
 p{

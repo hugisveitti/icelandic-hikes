@@ -29,7 +29,11 @@ div.all-hikes{
   /* font-size: 20px; */
   /* background-color: #99e5d8; */
   width:50%;
-  min-width: 400px;
+  min-width: 300px;
   margin: auto;
   margin-top: 20px;
+}
+
+.all-hikes-title{
+  margin: 5px;
 }
