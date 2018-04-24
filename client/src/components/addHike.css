@@ -6,6 +6,7 @@
 
 }
 
+
 form{
   padding:10px;
   /* background-color: #c4d5ef; */
@@ -126,4 +127,9 @@ div.hike:nth-child( 2n){
 
 div:last-child{
   padding-bottom:0px;
+}
+
+textarea{
+  width:90%;
+  margin:auto;
 }

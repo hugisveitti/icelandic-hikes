@@ -157,7 +157,7 @@ export class AddHike extends React.Component {
           driveHasRivercrossing:this.state.driveHasRivercrossing
         };
          // fetch('http://localhost/api/addHikes', {
-         fetch('http://206.189.23.79/api/addHikes', {
+         fetch('http://icelandichikes.com/api/addHikes', {
         method: 'POST',
         headers: {
           Accept: 'application/json',

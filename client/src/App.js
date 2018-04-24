@@ -91,7 +91,9 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Hikes in Iceland</h1>
         </header>
+
         <div className="content">
+<p>Welcome to Icelandichike.com, the hike database is a work in progress and anyone can add a hike. If you know a hike that is not already in the database please press 'Add Hike' and fill in the details.</p>
         <Map
           addingHike={this.addingHike}
           sendMarker={this.sendMarker}
@@ -102,7 +104,8 @@ class App extends Component {
         {addHikeElement}
         {addHikeBtn}
         </div>
-        <footer className="App-footer">
+        <br /> 
+     <footer className="App-footer">
           <p>Site made by Hugi Holm, if you have any suggestions contact me: hugiholm1@gmail.com</p>
         </footer>
       </div>

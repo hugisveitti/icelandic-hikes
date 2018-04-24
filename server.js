@@ -1,9 +1,12 @@
+const fs = require('fs');
 //node server
 
 const express = require('express');
 
 //fa og senda JSON
 var bodyParser = require('body-parser');
+
+const iplocation = require('iplocation');
 
 const app = express();
 var router = express.Router();
@@ -14,10 +17,11 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Origin", "http://icelandichikes.com");
     next();
  });
 
-
+var hits = 0;
 const firebase = require('firebase');
 
 
@@ -76,7 +80,44 @@ ref.on("value", function(data){
 
   app.get('/api/hikes', (req, res) => {
     res.json(hikesInfo);
-    console.log('data sent')
+    console.log('data sent');
+    console.log('hits ', hits);
+    hits++;
+
+   
+   
+
+  fs.readFile('tracker-log.json', (err, data) => {
+    if(err){console.log(err)}
+    else {
+       var obj = [];
+if(data[0]){
+obj = JSON.parse(data);
+}
+var hit = 1;
+if(obj[0]){
+hit = obj[obj.length-1].hit;
+hit++;
+}
+var ip2 = req.headers['x-forwarded-for'];
+var ip = req.connection.remoteAddress;
+
+var country = '';
+
+iplocation(String(ip2), (error, rs) => {
+console.log(rs);
+ country = rs.country_name;
+var date = String(new Date());
+var newData = {ip:ip,ip2:ip2,hit:hit, date: date, country:country};
+obj.push(newData);
+var json = JSON.stringify(obj);
+fs.writeFile('tracker-log.json',json);
+
+})
+
+
+      }
+    })
   })
 },function(err){
     console.log(err)
