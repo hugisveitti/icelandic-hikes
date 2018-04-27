@@ -12,10 +12,10 @@
     "react-simple-sidenav": "^0.1.6"
   },
   "scripts": {
-    "start": "PORT=80 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://206.189.23.79:5000"
+  "proxy": "http://localhost:5000"
 }

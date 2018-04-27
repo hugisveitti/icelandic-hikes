@@ -133,3 +133,20 @@ textarea{
   width:90%;
   margin:auto;
 }
+
+
+
+.addHike-point{
+  border-bottom: 1px solid;
+  margin: 10px;
+}
+
+.input-point{
+  margin: 10px;
+  margin-bottom: 20px;
+}
+
+.point-pos{
+  margin:0;
+  padding:0;
+}

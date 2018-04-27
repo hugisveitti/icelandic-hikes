@@ -10,7 +10,22 @@
 
   /* padding-bottom: 500px; */
   overflow-y: scroll;
+  /* left: -350px; */
 
+}
+
+.slide{
+  left: 100px;
+  animation: slide 8s;
+}
+
+@@keyframes slide {
+  0% {
+    transition: translateX(100px);
+  }
+  100%{
+        transition: translateX(400px);
+  }
 }
 
 .all-hikes-item{
@@ -29,4 +44,20 @@
   padding: 10px 0;
   margin-left: 30px;
   font-size: 26px;
+}
+
+.side-bar-search{
+  /* padding: 5px 0; */
+  margin: 10px 5px;
+  /* width:100px; */
+
+  padding:0;
+  /* margin:0; */
+
+}
+
+.search-icon{
+  float:left;
+  display: inline;
+  
 }

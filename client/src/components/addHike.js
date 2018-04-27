@@ -19,13 +19,26 @@ export class AddHike extends React.Component {
       description:'',
       isLoop: true,
       hasSameStartFinish: true,
+      startMarker:{
+        lat:0,
+        lng:0,
+        title:'Start of hike',
+        key:-1
+      },
+      endMarker:{
+        lat:0,
+        lng:0,
+        hike:'End of hike',
+        key:-2
+      },
       endLat:0,
       endLng:0,
       changingEndPoint:false,
       changingStartPoint:false,
       notificationSystem:null,
       hasRivercrossing:false,
-      driveHasRivercrossing:false
+      driveHasRivercrossing:false,
+      pointsOnHike:[]
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -99,6 +112,13 @@ export class AddHike extends React.Component {
       this.setState({changingStartPoint: false});
       this.props.setChangingStartLatLng(false);
     }
+
+//slokkva a ollum points
+    var pointsOnHike = this.state.pointsOnHike;
+    for(var i=0; i<pointsOnHike.length; i++){
+      pointsOnHike[i].changingPos = false;
+    }
+    this.setState({pointsOnHike});
     event.preventDefault();
   }
 
@@ -116,6 +136,14 @@ export class AddHike extends React.Component {
       this.setState({changingEndPoint: false});
       this.props.setChangingEndLatLng(false);
     }
+
+    //slokkva a ollum points
+        var pointsOnHike = this.state.pointsOnHike;
+        for(var i=0; i<pointsOnHike.length; i++){
+          pointsOnHike[i].changingPos = false;
+        }
+        this.setState({pointsOnHike});
+
     event.preventDefault();
   }
 
@@ -131,6 +159,7 @@ export class AddHike extends React.Component {
       description:'',
       endLat:0,
       endLng:0,
+      pointsOnHike:[],
     })
   }
 
@@ -138,8 +167,16 @@ export class AddHike extends React.Component {
   handleSubmit(event){
       console.log('submit')
       event.preventDefault();
-    if(this.state.title !== "" && this.state.length > 0 && this.state.duration !== '' ){
-        console.log('submitted tyring')
+    // if(this.state.title !== "" && this.state.length > 0 && this.state.duration !== '' ){
+    if(this.state.title !== ""){
+        console.log('submitted trying')
+        //all points have to have lat and lng
+        var points = [];
+        for(var i=0; i<this.state.pointsOnHike.length; i++){
+          if(this.state.pointsOnHike[i].lat !== 0 && this.state.pointsOnHike[i].lng !== 0){
+            points.push(this.state.pointsOnHike[i]);
+          }
+        }
         var sendData = {
           title:this.state.title,
           length:parseInt(this.state.length, 10),
@@ -154,10 +191,11 @@ export class AddHike extends React.Component {
           endLat:this.state.endLat,
           endLng:this.state.endLng,
           hasRivercrossing: this.state.hasRivercrossing,
-          driveHasRivercrossing:this.state.driveHasRivercrossing
+          driveHasRivercrossing:this.state.driveHasRivercrossing,
+          pointsOnHike:points
         };
-         // fetch('http://localhost/api/addHikes', {
-         fetch('http://icelandichikes.com/api/addHikes', {
+         fetch('http://localhost:5000/api/addHikes', {
+         // fetch('http://icelandichikes.com/api/addHikes', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -174,7 +212,9 @@ export class AddHike extends React.Component {
         this.clearInputs();
       }).catch((err) => {
         console.log('err',err)
-
+        toast.error('An Error occurred', {
+          position:toast.POSITION.TOP_CENTER
+        })
       });
     } else {
 
@@ -185,6 +225,112 @@ export class AddHike extends React.Component {
     }
   }
 
+  handleAddPoint(event){
+    event.preventDefault();
+    var pointsOnHike = this.state.pointsOnHike;
+    var poi = {
+      title:'',
+      changingPos:false,
+      lng:0,
+      lat:0,
+      info:'',
+    }
+    pointsOnHike.push(poi);
+    this.setState({pointsOnHike});
+    console.log(this.state.pointsOnHike);
+  }
+
+  changeAddPointValue(point){
+    const name = point.target.name;
+    const index = point.target.id;
+    const value = point.target.value;
+    var pointsOnHike = this.state.pointsOnHike;
+    if(name === 'title'){
+      pointsOnHike[index].title = value;
+    } else if(name === 'info'){
+      pointsOnHike[index].info = value;
+    } else if(name === 'lat'){
+      pointsOnHike[index].lat = value;
+    } else if(name === 'lng'){
+      pointsOnHike[index].lng = value;
+    }
+
+    pointsOnHike[index].key = index;
+
+    this.setState({pointsOnHike});
+  }
+
+//ef thad er verid ad baeta vid points og valid er ad baeta vid point med marker og yta a mappid
+  changePointPos(point){
+    var oldChange = this.state.pointsOnHike[point.target.id].changingPos;
+    point.preventDefault();
+    var pointsOnHike = this.state.pointsOnHike;
+    for(var i=0; i<pointsOnHike.length; i++){
+      pointsOnHike[i].changingPos = false;
+    }
+    this.props.setChangingStartLatLng(false);
+    this.props.setChangingEndLatLng(false);
+
+    //slokkva a hinum tokkunum
+    this.setState({changingEndPoint:false, changingStartPoint:false})
+    pointsOnHike[point.target.id].key = point.target.id;
+    pointsOnHike[point.target.id].changingPos = !oldChange;
+    this.setState({pointsOnHike})
+  }
+
+
+//draggable marker gerir hann selected
+  makeSelectedMarker(marker){
+    var pointsOnHike = this.state.pointsOnHike;
+    for(var i=0; i<pointsOnHike.length; i++){
+      pointsOnHike[i].changingPos = false;
+    }
+    this.props.setChangingStartLatLng(false);
+    this.props.setChangingEndLatLng(false);
+
+    for(var i=0; i<pointsOnHike.length; i++){
+      if(pointsOnHike[i].key === marker.key ){
+        pointsOnHike[i].changingPos = true;
+      }
+    }
+    this.setState({pointsOnHike});
+  }
+
+//param er stadsetningin sem ytt var a a mappinu
+  getMarker(param){
+    console.log(param)
+    var returnMarker;
+    if(this.state.addingStartLatLng){
+      returnMarker = {
+        title:'Start of Hike',
+        pos:{
+          lng:this.state.lng,
+          lat:this.state.lat
+        }
+      }
+    } else if(this.state.addingEndLatLng){
+      returnMarker = {
+        title:'End of Hike',
+        pos:{
+          endLng:this.state.lng,
+          endLat:this.state.lat
+        }
+      }
+    }else if(this.state.pointsOnHike[0]) {
+      var pointsOnHike = this.state.pointsOnHike;
+      for(var i=0; i<pointsOnHike.length; i++){
+        if(pointsOnHike[i].changingPos){
+          returnMarker = this.state.pointsOnHike[i];
+          console.log(param.lng)
+          console.log(pointsOnHike[i])
+          pointsOnHike[i].lng = param.lng;
+          pointsOnHike[i].lat = param.lat;
+          this.setState({pointsOnHike})
+        }
+      }
+    }
+    return returnMarker;
+  }
 
 
   render(){
@@ -218,6 +364,36 @@ export class AddHike extends React.Component {
       <span></span>
     );
 
+//adding points of interest to the hike or some kind of path
+    const AddPoint = this.state.pointsOnHike.map((point, index) =>
+      <div className="addHike-point" key={index}>
+        <input
+          type="text"
+          className="input-point"
+          placeholder="Title"
+          value={point.title}
+          name="title"
+          onChange={this.changeAddPointValue.bind(this)}
+          id={index}
+          />
+          <br />
+          <br />
+            <input className="point-pos" id={index} placeholder="Longitude" type="text" name="lng" value={point.lng !== 0 ? point.lng : ''} onChange={this.changeAddPointValue.bind(this)} />
+            <input className="point-pos" id={index} placeholder="Latitude" type="text" name="lat" value={point.lat !== 0 ? point.lat : ''} onChange={this.changeAddPointValue.bind(this)} />
+          <button id={index} onClick={this.changePointPos.bind(this)} style={point.changingPos ? {background: "#697487", color:"white"} : {color:"black"}}>
+            Change point by clicking map
+          </button>
+
+          <textarea
+            className="input-point"
+            placeholder="Information"
+            value={point.info}
+            name="info"
+            onChange={this.changeAddPointValue.bind(this)}
+            id={index}
+          />
+      </div>
+    );
 
 
     return (
@@ -333,6 +509,18 @@ export class AddHike extends React.Component {
               <textarea placeholder="Description" name="description" value={this.state.description} onChange={this.handleChange} />
             </label>
           </div>
+
+          <div className="hike">
+            <label className="info">
+              Add points on the hike and write some information about the point, either a point of interest or top of mountain.
+               The point can also be just a random point on the way.
+            </label>
+            {AddPoint}
+            <button onClick={this.handleAddPoint.bind(this)}>
+              Add Point
+            </button>
+          </div>
+
           <button className="submit" onClick={this.handleSubmit}>
             Submit
           </button>

@@ -26,4 +26,4 @@ npm run client
 
 ## App Info
 
-#Vefforrit sem veitir upplýsingar um göngur á Íslandi
+# Vefforrit sem veitir upplýsingar um göngur á Íslandi

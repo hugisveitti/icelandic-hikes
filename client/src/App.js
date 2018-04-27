@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Map from './components/map'
 import AddHike from './components/addHike'
-import SideHikes from './components/sideHikes.js';
+// import SideHikes from './components/sideHikes.js';
 
 function AddHikeButton(props){
     return  (
@@ -52,15 +52,31 @@ class App extends Component {
 
 //thegar notandi ytir a kortid
   sendMarker(param){
+
+    console.log(this.state.addingHike)
     if(this.state.addingHike){
       this.setState({newMarkerPos: param})
       this.sendMarkerToChild();
+
+    }
+    if(this.addHikeChild.current){
+      var marker = this.addHikeChild.current.getMarker(param);
+      return marker;
+    }
+
+  }
+
+//ef marker er draggable og hann er faerdur tha tharf ad lata hann vera selected marker
+  makeSelectedMarker(marker){
+    if(this.addHikeChild.current){
+      this.addHikeChild.current.makeSelectedMarker(marker);
     }
   }
 
   sendMarkerToChild(){
     this.addHikeChild.current.getPos(this.state.newMarkerPos);
   }
+
 
 
   render() {
@@ -83,10 +99,7 @@ class App extends Component {
       <span></span>
     )
 
-
-
     return (
-
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Hikes in Iceland</h1>
@@ -99,13 +112,14 @@ class App extends Component {
           sendMarker={this.sendMarker}
           ref={this.mapRef}
           selectedMarkerKey={this.state.selectedMarker}
+          makeSelectedMarker={this.makeSelectedMarker.bind(this)}
         />
 
         {addHikeElement}
         {addHikeBtn}
         </div>
-        <br /> 
-     <footer className="App-footer">
+        <br />
+        <footer className="App-footer">
           <p>Site made by Hugi Holm, if you have any suggestions contact me: hugiholm1@gmail.com</p>
         </footer>
       </div>

@@ -13,9 +13,14 @@ export class HikeInfo extends React.Component {
     this.props.setSelectedMarker(null);
   }
 
+  suggestAnEdit(){
+
+  }
+
+//faer eitt hike og setur thad fyrir nedan kortid
     render(){
       const info = this.props.info;
-      if(info){
+      if(info && info.title !== " " && info.length){
 
           const HasSameStartFinish = !info.endLng  ? (
               <li>Hike has the same starting and finish point</li>
@@ -38,7 +43,7 @@ export class HikeInfo extends React.Component {
             //const HikeHasRiverCrossings = info.
 
         return (
-          <div className="hike-info">
+          <div className="hike-info" onClick={this.props.toggleSideNav}>
             <h1 className="hike-info-title">{info.title}</h1>
             <button className="close-hike-info" onClick={this.closeInfo.bind(this)}>X</button>
             <ul>
@@ -49,6 +54,9 @@ export class HikeInfo extends React.Component {
               <li>Elevation is {info.elevation} meters</li>
               {IsLoop}
             </ul>
+            <button onClick={this.suggestAnEdit.bind(this)}>
+              Suggest an edit
+            </button>
           </div>
         )
       } else {
