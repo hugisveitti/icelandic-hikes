@@ -11,6 +11,10 @@ var bodyParser = require('body-parser');
 
 const iplocation = require('iplocation');
 
+
+const tj = require('togeojson');
+const DOMParser = require('xmldom').DOMParser;
+
 const app = express();
 var router = express.Router();
 
@@ -49,8 +53,8 @@ const storage = multer.diskStorage({
   },
 })
 
-const upload = multer({storage});
 
+const upload = multer({storage});
 app.post('/gpsroutes', upload.single('selectedFile'), (req, res) => {
   const file = req.file;
   const meta = req.body;
@@ -58,25 +62,16 @@ app.post('/gpsroutes', upload.single('selectedFile'), (req, res) => {
   res.send();
 })
 
+//fyrir ad downloada routes,
 app.get('/downloadGpsRoute:id', (req, res) => {
   var id = req.params.id;
-  console.log('req.params',req.params)
-  console.log('id',id)
   var fileName = id.substring(1,id.length);
-  var file = 'Fimmvörðuháls_28_Jun_2016_07_24_13.gpx';
-  console.log(req.body)
   var path = (__dirname + '/gpsroutes/' + fileName);
-  console.log(path)
-  console.log(res.headersSent);
-  console.log('#############################################')
-  // console.log(res)
-
   res.download(path, file, (err) => {
     if(err){
       console.log(err);
     }
   })
-  // res.send();
 })
 
 
@@ -158,6 +153,30 @@ ref.on("value", function(data){
     console.log(err)
   })
 
+app.get('/api/getRoute:id', (req, res) => {
+  var route = {pos:'jelllllo'}
+  var id = req.params.id;
+  var fileName = id.substring(1, id.length);
+  console.log(id);
+  console.log(fileName);
+  var path = __dirname + '/gpsRoutes/' + fileName;
+  var ext = fileName.substring(fileName.length-3, fileName.length);
+  console.log(ext);
+  console.log(path);
+
+  if(ext === 'gpx'){
+    var gpx = new DOMParser().parseFromString(fs.readFileSync(path, 'utf8'));
+    var converted = tj.gpx(gpx);
+    var convertedWithStyles = tj.gpx(gpx, {styles: true});
+    res.json(convertedWithStyles)
+  } else if(ext === 'kml'){
+    var kml = new DOMParser().parseFromString(fs.readFileSync(path, 'utf8'));
+    var converted = tj.kml(kml);
+    var convertedWithStyles = tj.kml(kml, {styles: true});
+    res.json(convertedWithStyles)
+  }
+})
+
 //add contribution values to firebase
 app.post('/api/addHikes', (req, res) => {
   console.log("succa")
@@ -167,6 +186,14 @@ app.post('/api/addHikes', (req, res) => {
   var ref = database.ref('NewHikes');
   ref.push(newData);
   res.send('takk');
+})
+
+app.post('/api/addEdit', (req, res) => {
+  console.log('edit success')
+  var editData = req.body;
+  var ref = database.ref('EditHikes');
+  ref.push(editData);
+  res.send('takk')
 })
 
 // app.get('/', (req,res) => {

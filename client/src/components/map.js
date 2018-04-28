@@ -2,7 +2,7 @@
 
 import React from 'react';
 import './map.css';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from 'react-google-maps';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow, Polyline } from 'react-google-maps';
 import { compose, withProps } from 'recompose';
 import HikeInfo from './hikeInfo.js';
 // import AllHikes from './allHikes.js';
@@ -28,6 +28,9 @@ var MyMapComponent = compose(
     onZoomChanged={props.zoomChanged}
     ref={props.onMapMounted}
   >
+  <Polyline
+    path={props.routePath}
+  />
 
   {props.markers.map((hike, index) => {
     return (
@@ -95,6 +98,7 @@ export class Map extends React.Component {
       markerSelected: false,
       hidingOtherMarkers: false,
       showSideNav:false,
+      routePath:[],
     };
     this.handleMarkerClick = this.handleMarkerClick.bind(this);
     this.handleZoomBack = this.handleZoomBack.bind(this);
@@ -180,14 +184,15 @@ export class Map extends React.Component {
       this.setState({hikes})
     }
 
-    const image = {
-      url: "blue_MarkerA.png",
-      size: new google.maps.Size(71, 71),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(17, 34),
-      scaledSize: new google.maps.Size(25, 25)
-    }
+    // const image = {
+    //   url: "blue_MarkerA.png",
+    //   size: new google.maps.Size(71, 71),
+    //   origin: new google.maps.Point(0, 0),
+    //   anchor: new google.maps.Point(17, 34),
+    //   scaledSize: new google.maps.Size(25, 25)
+    // }
 
+//virkar ekki
     // const image = './blue_MarkerA.png';
 
     //ef ytt var a pointsOnHike marker tha er hann i changingPos mode,
@@ -199,14 +204,12 @@ export class Map extends React.Component {
     this.setState({selectedMarkerInfo:marker});
 
 
-    marker.markerIcon = image;
+    // marker.markerIcon = image;
 
     //opna title fyrir markerinn sem ytt var a
     marker.isOpen = true;
     //animation
     marker.markerAni = 4;
-
-    console.log(this.state.hikes)
 
     this.setState({selectedMarker: marker})
     if(this.state.map.getZoom() < 10){
@@ -362,6 +365,30 @@ export class Map extends React.Component {
     // this.setState({zoom: zo})
   }
 
+  handleShowRoute(route){
+    var coordinates = route.features[0].geometry.coordinates;
+    var jsonCoo = [];
+    //bara telja fimmta hvert thad er nogu nakvaemt, ma vera sjaldnar
+    for(var i=0;i<coordinates.length; i+=5){
+      if(coordinates[i].length>3){
+        for(var j=0;j<coordinates[i].length; j+=5){
+          var pos = {lat:coordinates[i][j][1], lng:coordinates[i][j][0]}
+          jsonCoo.push(pos);
+        }
+      } else {
+        var pos2 = {lat:coordinates[i][1], lng:coordinates[i][0]}
+        jsonCoo.push(pos2);
+      }
+
+    }
+
+    //json coordinates file-arnir eru ekki allir eins
+    //er jsonCoo[0].length > 2 tha er fylkid sett upp odruvisi, thrivitt
+
+
+    this.setState({routePath:jsonCoo});
+  }
+
   setChangeStartLatLng(bool){
     this.setState({addingStartLatLng: bool})
   }
@@ -503,6 +530,7 @@ export class Map extends React.Component {
             ani={this.state.markerAni}
             markerPosChanged={this.handleMarkerPosChanged.bind(this)}
             markerDragEnd={this.handleMarkerDragEnd.bind(this)}
+            routePath={this.state.routePath}
           />
           {hideOtherMarkers}
           {zoomBtn}
@@ -510,6 +538,7 @@ export class Map extends React.Component {
             info = {this.state.selectedMarker}
             setSelectedMarker={(marker) => this.setSelectedMarker(marker)}
             toggleSideNav={this.closeSideNav.bind(this)}
+            showRoute={(coordinates) => this.handleShowRoute(coordinates)}
           />
           </div>
           <div

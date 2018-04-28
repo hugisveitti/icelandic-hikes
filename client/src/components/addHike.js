@@ -212,8 +212,8 @@ export class AddHike extends React.Component {
           userName:this.state.userName,
           gpsRouteFileName:this.state.gpsRouteFileName
         };
-         fetch('http://localhost:5000/api/addHikes', {
-         // fetch('http://icelandichikes.com/api/addHikes', {
+         // fetch('http://localhost:5000/api/addHikes', {
+         fetch('http://icelandichikes.com/api/addHikes', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -221,8 +221,6 @@ export class AddHike extends React.Component {
         },
         body: JSON.stringify(sendData)
       }).then((res) => {
-        console.log('res', res);
-        console.log('success')
         toast.success("Thank You For Your Submission! It will be reviewed and then added to the database!", {
           position: toast.POSITION.TOP_CENTER
         });
@@ -255,7 +253,6 @@ export class AddHike extends React.Component {
     }
     pointsOnHike.push(poi);
     this.setState({pointsOnHike});
-    console.log(this.state.pointsOnHike);
   }
 
   changeAddPointValue(point){
@@ -306,9 +303,9 @@ export class AddHike extends React.Component {
     this.props.setChangingStartLatLng(false);
     this.props.setChangingEndLatLng(false);
 
-    for(var i=0; i<pointsOnHike.length; i++){
-      if(pointsOnHike[i].key === marker.key ){
-        pointsOnHike[i].changingPos = true;
+    for(var j=0; j<pointsOnHike.length; j++){
+      if(pointsOnHike[j].key === marker.key ){
+        pointsOnHike[j].changingPos = true;
       }
     }
     this.setState({pointsOnHike});
@@ -353,26 +350,21 @@ export class AddHike extends React.Component {
 //select routes with file selector
   selectHikeFile(event){
     event.preventDefault();
-    console.log(event.target.value);
-    var value = event.target.value;
+    // var value = event.target.value;
     var files = event.target.files[0];
 
-    console.log(files)
     //check if file extension is correct
     var ext = files.name.substring(files.name.length-3, files.name.length);
-    console.log(ext);
-    if(ext === 'kml' ||ext === "kmz"|| ext === "gpx"){
+    if(ext === 'kml' || ext === "gpx"){
       var gpsRouteUrl = files;
       this.setState({gpsRouteUrl});
       var gpsRouteFileName = files.name;
       this.setState({gpsRouteFileName})
     } else {
-      toast.error('Your file must be one of the formats, .gpx, .kmz, .kml', {
+      toast.error('Your file must be one of the formats, .gpx, .kml', {
         position: toast.POSITION.TOP_CENTER
       });
     }
-
-
   }
 
 
@@ -566,7 +558,7 @@ export class AddHike extends React.Component {
 
           <div className="hike">
             <label className="info">
-              Upload the hike route, the formats possible are .gpx, .kml and .kmz.
+              Upload the hike route, the formats possible are .gpx and .kml
             </label>
             <input
               id="file-input"
