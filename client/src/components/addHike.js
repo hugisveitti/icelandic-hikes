@@ -3,6 +3,8 @@ import './addHike.css'
 
 import { ToastContainer, toast } from 'react-toastify';
 
+//fyrir file upload a node serverinn
+import axios from 'axios';
 
 
 export class AddHike extends React.Component {
@@ -38,7 +40,10 @@ export class AddHike extends React.Component {
       notificationSystem:null,
       hasRivercrossing:false,
       driveHasRivercrossing:false,
-      pointsOnHike:[]
+      pointsOnHike:[],
+      userName:'',
+      gpsRouteUrl:'',
+      gpsRouteFileName:'',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -177,6 +182,17 @@ export class AddHike extends React.Component {
             points.push(this.state.pointsOnHike[i]);
           }
         }
+
+        //send gps rout if there is one
+        if(this.state.gpsRouteUrl !== ""){
+          console.log('sending route', this.state.gpsRouteUrl);
+          const data = new FormData();
+          data.append('selectedFile',this.state.gpsRouteUrl);
+          axios.post('/gpsroutes', data).then((res) => {
+            console.log(res);
+          })
+        }
+
         var sendData = {
           title:this.state.title,
           length:parseInt(this.state.length, 10),
@@ -192,7 +208,9 @@ export class AddHike extends React.Component {
           endLng:this.state.endLng,
           hasRivercrossing: this.state.hasRivercrossing,
           driveHasRivercrossing:this.state.driveHasRivercrossing,
-          pointsOnHike:points
+          pointsOnHike:points,
+          userName:this.state.userName,
+          gpsRouteFileName:this.state.gpsRouteFileName
         };
          fetch('http://localhost:5000/api/addHikes', {
          // fetch('http://icelandichikes.com/api/addHikes', {
@@ -332,6 +350,31 @@ export class AddHike extends React.Component {
     return returnMarker;
   }
 
+//select routes with file selector
+  selectHikeFile(event){
+    event.preventDefault();
+    console.log(event.target.value);
+    var value = event.target.value;
+    var files = event.target.files[0];
+
+    console.log(files)
+    //check if file extension is correct
+    var ext = files.name.substring(files.name.length-3, files.name.length);
+    console.log(ext);
+    if(ext === 'kml' ||ext === "kmz"|| ext === "gpx"){
+      var gpsRouteUrl = files;
+      this.setState({gpsRouteUrl});
+      var gpsRouteFileName = files.name;
+      this.setState({gpsRouteFileName})
+    } else {
+      toast.error('Your file must be one of the formats, .gpx, .kmz, .kml', {
+        position: toast.POSITION.TOP_CENTER
+      });
+    }
+
+
+  }
+
 
   render(){
 
@@ -410,7 +453,7 @@ export class AddHike extends React.Component {
               Name of the Hike
             </label>
               <label>
-                <input placeholder="Name of Hike" type="text" name="title" title={this.state.title} onChange={this.handleChange} />
+                <input placeholder="Name of Hike" type="text" name="title" value={this.state.title} onChange={this.handleChange} />
               </label>
           </div>
           <div className="hike">
@@ -519,6 +562,33 @@ export class AddHike extends React.Component {
             <button onClick={this.handleAddPoint.bind(this)}>
               Add Point
             </button>
+          </div>
+
+          <div className="hike">
+            <label className="info">
+              Upload the hike route, the formats possible are .gpx, .kml and .kmz.
+            </label>
+            <input
+              id="file-input"
+              type="file"
+              name="gpsHikeURL"
+              onChange={this.selectHikeFile.bind(this)}
+            />
+          </div>
+
+          <div className="hike">
+            <label className="info">
+              Write your name if you want to be credited your submission.
+            </label>
+            <label>
+              <input
+                type="text"
+                placeholder="Your name"
+                 name="userName"
+                 value={this.state.userName}
+                 onChange={this.handleChange}
+              />
+            </label>
           </div>
 
           <button className="submit" onClick={this.handleSubmit}>

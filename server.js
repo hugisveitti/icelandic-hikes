@@ -1,6 +1,9 @@
 const fs = require('fs');
 //node server
 
+//fyrir storage
+const multer = require('multer');
+
 const express = require('express');
 
 //fa og senda JSON
@@ -37,6 +40,46 @@ var fireApp = firebase.initializeApp({
 
 
 
+const storage = multer.diskStorage({
+  destination: (req,file, cb) => {
+     cb(null, './gpsroutes');
+   },
+  filename(req, file, cb) {
+    cb(null, `${file.originalname}`);
+  },
+})
+
+const upload = multer({storage});
+
+app.post('/gpsroutes', upload.single('selectedFile'), (req, res) => {
+  const file = req.file;
+  const meta = req.body;
+  console.log('gps routes post')
+  res.send();
+})
+
+app.get('/downloadGpsRoute:id', (req, res) => {
+  var id = req.params.id;
+  console.log('req.params',req.params)
+  console.log('id',id)
+  var fileName = id.substring(1,id.length);
+  var file = 'Fimmvörðuháls_28_Jun_2016_07_24_13.gpx';
+  console.log(req.body)
+  var path = (__dirname + '/gpsroutes/' + fileName);
+  console.log(path)
+  console.log(res.headersSent);
+  console.log('#############################################')
+  // console.log(res)
+
+  res.download(path, file, (err) => {
+    if(err){
+      console.log(err);
+    }
+  })
+  // res.send();
+})
+
+
 //get data from firebase
 var database = firebase.database();
 var ref = database.ref('Hike');
@@ -59,6 +102,7 @@ ref.on("value", function(data){
     var endLat = output[k].endLat;
     var endLng = output[k].endLng;
     var pointsOnHike = output[k].pointsOnHike;
+    var gpsRouteFileName = output[k].gpsRouteFileName;
     hikesInfo.push({
       key:k,
       title: title,
@@ -73,9 +117,10 @@ ref.on("value", function(data){
       endLat:endLat,
       endLng:endLng,
       pointsOnHike:pointsOnHike,
+      gpsRouteFileName:gpsRouteFileName,
     });
   }
-  console.log(hikesInfo);
+  // console.log(hikesInfo);
 
   app.get('/api/hikes', (req, res) => {
     res.json(hikesInfo);
@@ -132,6 +177,6 @@ app.post('/api/addHikes', (req, res) => {
 const port = 5000;
 app.listen(port, () => `Server running on port ${port}`);
 
- // app.use('/', router);
+ app.use('/', router);
 
  module.exports = router;

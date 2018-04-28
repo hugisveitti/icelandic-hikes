@@ -1,5 +1,7 @@
 import React from 'react';
 import './hikeInfo.css'
+import axios from 'axios';
+import { browserHistory } from 'react-router';
 
 export class HikeInfo extends React.Component {
   constructor() {
@@ -7,6 +9,7 @@ export class HikeInfo extends React.Component {
     this.state = {
       info: []
     };
+    this.downloadGpsRoute = this.downloadGpsRoute.bind(this);
   }
 
   closeInfo(){
@@ -16,6 +19,32 @@ export class HikeInfo extends React.Component {
   suggestAnEdit(){
 
   }
+
+  //
+  // headers: {
+  //   Accept: 'application/json',
+  //   'Content-Type': 'application/json',
+  // },
+  // body: JSON.stringify(sendData)
+
+  downloadGpsRoute(fileName){
+    console.log(fileName);
+    var path = 'http://localhost:5000/downloadGpsRoute:' + fileName;
+    // };
+    console.log(path)
+    // fetch('http://localhost:5000/downloadGpsRoute/:id', {
+    // // fetch('http://icelandichikes.com/api/addHikes', {
+    //
+    //  }).then((res) => {
+    //    console.log('res',res)
+    //  }).catch((err) => {
+    //    console.log('err',err)
+    //  });
+
+    if(window){
+      window.open(path);
+    }
+   }
 
 //faer eitt hike og setur thad fyrir nedan kortid
     render(){
@@ -40,6 +69,22 @@ export class HikeInfo extends React.Component {
               </div>
             )
 
+
+            const gpsRoutes = info.gpsRouteFileName && info.gpsRouteFileName !== "" ? (
+              <li> GPS routes
+                <div>
+                  <p>
+                    You can download the gps route and open it with your smart phone in a app such as Geo Tracker.
+                  </p>
+                  <br />
+                  <p>
+                    {info.gpsRouteFileName}
+                  </p>
+                  <button onClick={() => this.downloadGpsRoute(info.gpsRouteFileName)}>Download Route</button>
+                </div>
+              </li>
+            ) : (<span />)
+
             //const HikeHasRiverCrossings = info.
 
         return (
@@ -53,6 +98,7 @@ export class HikeInfo extends React.Component {
               <li>Duration is {info.duration}</li>
               <li>Elevation is {info.elevation} meters</li>
               {IsLoop}
+              {gpsRoutes}
             </ul>
             <button onClick={this.suggestAnEdit.bind(this)}>
               Suggest an edit

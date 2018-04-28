@@ -466,6 +466,10 @@ export class Map extends React.Component {
       this.setState({showSideNav:!showSideNav})
     }
 
+    closeSideNav(){
+      this.setState({showSideNav:false})
+    }
+
 
   render() {
     const zoomBtn = this.state.isZoomed ? (
@@ -505,7 +509,7 @@ export class Map extends React.Component {
           <HikeInfo
             info = {this.state.selectedMarker}
             setSelectedMarker={(marker) => this.setSelectedMarker(marker)}
-            toggleSideNav={this.toggleSideNav.bind(this)}
+            toggleSideNav={this.closeSideNav.bind(this)}
           />
           </div>
           <div
