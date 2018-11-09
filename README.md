@@ -1,7 +1,7 @@
 
 
 ## Um forritð
-> Vefforrit sem sýnir upplýsingar um gönguleiðir á Íslandi.
+> Vefforrit sem sýnir upplýsingar um gönguleiðir á Íslandi. Notendur geta bætt við göngum með gps hnitum. 
 
 ## Quick Start
 
@@ -27,4 +27,5 @@ npm run client
 ## App Info
 
 # Vefforrit sem veitir upplýsingar um göngur á Íslandi
-Ég gerði þetta forrit til að læra aðeins á nodejs og reactjs en fékk svo leið og hætti. Það virkar næstum vel, nokkrar litlar bugs og útlitið er ekki tilbúið.
+Ég gerði þetta forrit til að læra aðeins á nodejs og reactjs en fékk svo leið og hætti. Það virkar næstum vel, nokkrar litlar bugs og útlitið er ekki tilbúið. Ég btw kunni lítið sem ekkert á nodejs og react fyrir þ.a. ég clonaði einhvern heimskan "byrjanda-pakka" og þegar ég fattaði að það var frekar stupid hætti ég.
+Eitt af stærstu vandamálunum var að ég hef ekki gengið mikið um landið og því get ég ekki bætt við göngum með miklu öryggi.
