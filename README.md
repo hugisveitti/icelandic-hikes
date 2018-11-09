@@ -27,3 +27,4 @@ npm run client
 ## App Info
 
 # Vefforrit sem veitir upplýsingar um göngur á Íslandi
+Ég gerði þetta forrit til að læra aðeins á nodejs og reactjs en fékk svo leið og hætti. Það virkar næstum vel, nokkrar litlar bugs og útlitið er ekki tilbúið.
